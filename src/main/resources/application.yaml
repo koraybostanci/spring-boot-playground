@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: @project.name@
+  redis:
+    host: localhost
+    port: 6379
+  cache:
+    type: redis
+    redis:
+      time-to-live: 10000 # 10 secs
+management:
+  server:
+    port: 7979
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
+services:
+  github:
+    base-url: "https://api.github.com/"
+    paths:
+      users: "users"
