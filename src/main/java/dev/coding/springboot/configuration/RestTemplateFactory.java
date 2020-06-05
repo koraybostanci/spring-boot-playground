@@ -11,7 +11,6 @@ import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@Configuration
 public class RestTemplateFactory {
 
     private static final int CONNECT_TIMEOUT = 1000;
