@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import java.net.URI;
 import java.util.Map;
 
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
@@ -25,8 +26,12 @@ public class ServiceEndpointProperties {
         private String baseUrl;
         private Map<String, String> paths;
 
-        public String getUrl(final String key) {
-            return fromPath(baseUrl).path(getPath(key)).build().toUri().toString();
+        public URI getBaseUri() {
+            return fromPath(baseUrl).build().toUri();
+        }
+
+        public URI getPathUri(final String pathKey) {
+            return fromPath(baseUrl).path(getPath(pathKey)).build().toUri();
         }
 
         private String getPath(final String key) {
