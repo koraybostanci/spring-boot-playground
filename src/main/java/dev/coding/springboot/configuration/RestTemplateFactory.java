@@ -1,9 +1,7 @@
 package dev.coding.springboot.configuration;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,7 +13,6 @@ public class RestTemplateFactory {
 
     private static final int CONNECT_TIMEOUT = 1000;
     private static final int READ_TIMEOUT = 1000;
-    private static final int CONNECTION_REQUEST_TIMEOUT = 1000;
 
     private RestTemplateFactory() {
     }
@@ -27,10 +24,9 @@ public class RestTemplateFactory {
     }
 
     private static ClientHttpRequestFactory getClientHttpRequestFactory() {
-        final HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        final SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(CONNECT_TIMEOUT);
         requestFactory.setReadTimeout(READ_TIMEOUT);
-        requestFactory.setConnectionRequestTimeout(CONNECTION_REQUEST_TIMEOUT);
         return requestFactory;
     }
 }
