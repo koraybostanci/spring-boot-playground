@@ -3,11 +3,11 @@ package dev.coding.springboot.rest.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController("/test")
 public class TestController {
 
-    @GetMapping("/test")
-    public String test() {
+    @GetMapping
+    public String get() {
         return "Ok";
     }
 

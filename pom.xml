@@ -16,6 +16,7 @@
     <properties>
         <java.version>11</java.version>
         <modelmapper.version>2.3.0</modelmapper.version>
+        <resilience4j-spring-boot2.version>1.4.0</resilience4j-spring-boot2.version>
     </properties>
 
     <dependencies>
@@ -53,6 +54,11 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-spring-boot2</artifactId>
+            <version>${resilience4j-spring-boot2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

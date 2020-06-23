@@ -1,6 +1,4 @@
 package dev.coding.springboot.configuration;
-
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,15 +12,15 @@ import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 @Getter
 @Setter
 @Validated
-@ConfigurationProperties("services")
+@ConfigurationProperties("service-endpoints")
 public class ServiceEndpointProperties {
 
-    private Service github;
+    private ServiceEndpoint github;
 
     @Getter
     @Setter
     @Validated
-    public static class Service {
+    public static class ServiceEndpoint {
         private String baseUrl;
         private Map<String, String> paths;
 

@@ -20,7 +20,7 @@ management:
           - info
           - metrics
           - prometheus
-services:
+service-endpoints:
   github:
     base-url: "https://api.github.com/"
     paths:
