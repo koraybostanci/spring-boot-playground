@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import java.net.URI;
 import java.util.Map;
 
+import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
 @Getter
@@ -15,7 +16,11 @@ import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 @ConfigurationProperties("service-endpoints")
 public class ServiceEndpointProperties {
 
-    private ServiceEndpoint github;
+    private ServiceEndpoint github = new ServiceEndpoint();
+
+    public ServiceEndpoint getGithub() {
+        return github;
+    }
 
     @Getter
     @Setter
@@ -29,7 +34,11 @@ public class ServiceEndpointProperties {
         }
 
         public URI getPathUri(final String pathKey) {
-            return fromPath(baseUrl).path(getPath(pathKey)).build().toUri();
+            return fromHttpUrl(baseUrl).path(getPath(pathKey)).build().toUri();
+        }
+
+        public URI getPathUri(final String pathKey, final Object... variables) {
+            return fromHttpUrl(baseUrl).path(getPath(pathKey)).buildAndExpand(variables).toUri();
         }
 
         private String getPath(final String key) {

@@ -25,3 +25,4 @@ service-endpoints:
     base-url: "https://api.github.com/"
     paths:
       users: "users"
+      user-by-username: "users/{username}"

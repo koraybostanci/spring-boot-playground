@@ -1,34 +1,49 @@
 package dev.coding.springboot.gateway;
 
-import dev.coding.springboot.configuration.ServiceEndpointProperties.ServiceEndpoint;
-import org.springframework.http.RequestEntity;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
+import java.util.Map;
+import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 public abstract class RestGateway {
 
-    private final ServiceEndpoint serviceEndpoint;
     private final RestTemplate restTemplate;
 
-    public RestGateway(final ServiceEndpoint serviceEndpoint, final RestTemplate restTemplate) {
-        this.serviceEndpoint = serviceEndpoint;
+    public RestGateway(final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    protected <T> ResponseEntity<T> getEntity(final RequestEntity<?> requestEntity, final Class<T> responseType) {
-        return getEntity(serviceEndpoint.getBaseUri(), requestEntity, responseType);
+    protected <T> ResponseEntity<T> getEntity(final GetRequestObject requestObject) {
+        return restTemplate.exchange(requestObject.getUri(), GET, buildHttpEntity(requestObject), requestObject.getResponseType());
     }
 
-    protected <T> ResponseEntity<T> getEntity(final String pathKey, final RequestEntity<?> requestEntity, final Class<T> responseType) {
-        return getEntity(serviceEndpoint.getPathUri(pathKey), requestEntity, responseType);
+    private HttpHeaders buildHttpHeaders(final GetRequestObject requestObject) {
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(APPLICATION_JSON);
+        httpHeaders.setAccept(singletonList(APPLICATION_JSON));
+
+        final Optional<Map<String, String>> customHeaders = requestObject.customHeaders();
+
+        if (customHeaders.isPresent()) {
+            customHeaders.get().entrySet().stream()
+                    .forEach(entry -> httpHeaders.add(entry.getKey(), entry.getValue()));
+        }
+
+        return httpHeaders;
     }
 
-    protected <T> ResponseEntity<T> getEntity(final URI uri, final RequestEntity<?> requestEntity, final Class<T> responseType) {
-        return restTemplate.exchange(uri, GET, requestEntity, responseType);
+    private <T> HttpEntity<T> buildHttpEntity(final GetRequestObject requestObject) {
+        final HttpHeaders httpHeaders = buildHttpHeaders(requestObject);
+        return requestObject.getRequestBody().isPresent()
+            ? new HttpEntity(requestObject.getRequestBody().get(), httpHeaders)
+            : new HttpEntity(httpHeaders);
     }
 
 }
