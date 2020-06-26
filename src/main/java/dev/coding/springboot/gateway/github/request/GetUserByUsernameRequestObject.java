@@ -1,7 +1,8 @@
-package dev.coding.springboot.gateway.github;
+package dev.coding.springboot.gateway.github.request;
 
 import dev.coding.springboot.configuration.ServiceEndpointProperties.ServiceEndpoint;
 import dev.coding.springboot.gateway.GetRequestObject;
+import dev.coding.springboot.gateway.github.domain.GithubUser;
 
 import java.net.URI;
 

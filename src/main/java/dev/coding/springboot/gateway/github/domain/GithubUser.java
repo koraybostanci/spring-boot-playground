@@ -1,4 +1,4 @@
-package dev.coding.springboot.gateway.github;
+package dev.coding.springboot.gateway.github.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
