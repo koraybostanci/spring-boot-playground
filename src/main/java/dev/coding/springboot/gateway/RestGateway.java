@@ -29,7 +29,7 @@ public abstract class RestGateway {
         httpHeaders.setContentType(APPLICATION_JSON);
         httpHeaders.setAccept(singletonList(APPLICATION_JSON));
 
-        final Optional<Map<String, String>> customHeaders = requestObject.customHeaders();
+        final Optional<Map<String, String>> customHeaders = requestObject.getCustomHeaders();
 
         if (customHeaders.isPresent()) {
             customHeaders.get().entrySet().stream()
