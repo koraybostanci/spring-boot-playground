@@ -10,8 +10,6 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties("service-endpoints")
 public class ServiceEndpointProperties {
 
-    @Getter
-    @Setter
-    private ServiceEndpoint github = new ServiceEndpoint();
+    private ServiceEndpoint github;
 
 }
