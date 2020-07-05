@@ -26,3 +26,7 @@ service-endpoints:
     paths:
       users: "users"
       user-by-username: "users/{username}"
+logging:
+  level:
+    root: warn
+    dev.coding.springboot: debug

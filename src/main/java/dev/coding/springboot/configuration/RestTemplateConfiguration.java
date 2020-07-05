@@ -4,11 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import static dev.coding.springboot.configuration.RestTemplateFactory.getBasicRestTemplate;
+
 @Configuration
 public class RestTemplateConfiguration {
 
     @Bean
     public RestTemplate getDefaultRestTemplate() {
-        return RestTemplateFactory.getBasicRestTemplate();
+        return getBasicRestTemplate();
     }
 }
