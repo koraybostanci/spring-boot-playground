@@ -3,6 +3,7 @@ package dev.coding.springboot.demo.github.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class GithubUser implements Serializable {
 
@@ -37,5 +38,29 @@ public class GithubUser implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GithubUser user = (GithubUser) o;
+        return id.equals(user.id) &&
+                login.equals(user.login) &&
+                url.equals(user.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, login, url);
+    }
+
+    @Override
+    public String toString() {
+        return "GithubUser{" +
+                "id='" + id + '\'' +
+                ", login='" + login + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }

@@ -21,7 +21,7 @@ import static dev.coding.springboot.demo.github.common.TestObjectFactory.anyGith
 import static dev.coding.springboot.demo.github.common.TestObjectFactory.anyGithubUserList;
 import static dev.coding.springboot.demo.github.common.TestObjectFactory.ANY_GITHUB_USER_ID;
 import static dev.coding.springboot.demo.github.common.TestObjectFactory.ANY_GITHUB_USER_NAME;
-import static dev.coding.springboot.demo.github.common.TestRestGatewayHelper.buildHttpEntity;
+import static dev.coding.springboot.demo.github.common.TestObjectFactory.buildHttpEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -38,16 +38,13 @@ public class GithubGatewayTest {
     private static final String PATH_VALUE_USER_BY_USERNAME = "users/{username}";
 
     @Mock
-    private ServiceEndpointProperties serviceEndpointProperties;
-
-    @Mock
     private RestTemplate restTemplate;
 
     private GithubGateway githubGateway;
 
     @BeforeEach
     public void setUp() {
-        when(serviceEndpointProperties.getGithub()).thenReturn(buildGithubServiceEndpoint());
+        final ServiceEndpointProperties serviceEndpointProperties = anyServiceEndpointProperties();
         githubGateway = new GithubGateway(serviceEndpointProperties, restTemplate);
     }
 
@@ -112,8 +109,10 @@ public class GithubGatewayTest {
         assertThat(usersRetrieved.isEmpty()).isTrue();
     }
 
-    private ServiceEndpoint buildGithubServiceEndpoint() {
-        final ServiceEndpoint serviceEndpoint = new ServiceEndpoint();
+    private ServiceEndpointProperties anyServiceEndpointProperties() {
+        final ServiceEndpointProperties serviceEndpointProperties = new ServiceEndpointProperties();
+
+        final ServiceEndpoint serviceEndpoint = serviceEndpointProperties.getGithub();
         serviceEndpoint.setBaseUrl(BASE_URL);
 
         final Map<String, String> paths = new HashMap<>();
@@ -121,7 +120,7 @@ public class GithubGatewayTest {
         paths.put(PATH_KEY_USER_BY_USERNAME, PATH_VALUE_USER_BY_USERNAME);
         serviceEndpoint.setPaths(paths);
 
-        return serviceEndpoint;
+        return serviceEndpointProperties;
     }
 
     private URI buildGetUsersUri() {

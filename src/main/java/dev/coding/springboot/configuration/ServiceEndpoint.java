@@ -1,12 +1,17 @@
 package dev.coding.springboot.configuration;
 
 import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 @Validated
 public class ServiceEndpoint {
 
+    @NotBlank
     private String baseUrl;
+
+    @NotBlank
     private Map<String, String> paths;
 
     public String getBaseUrl() {
