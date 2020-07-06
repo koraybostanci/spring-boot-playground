@@ -2,7 +2,9 @@ package dev.coding.springboot.demo.github;
 
 import dev.coding.springboot.configuration.ServiceEndpoint;
 import dev.coding.springboot.configuration.ServiceEndpointProperties;
-import dev.coding.springboot.demo.github.domain.GithubUser;
+import dev.coding.springboot.demo.domain.User;
+import dev.coding.springboot.demo.github.GithubGateway;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,11 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static dev.coding.springboot.demo.github.common.TestObjectFactory.anyGithubUser;
-import static dev.coding.springboot.demo.github.common.TestObjectFactory.anyGithubUserList;
-import static dev.coding.springboot.demo.github.common.TestObjectFactory.ANY_GITHUB_USER_ID;
-import static dev.coding.springboot.demo.github.common.TestObjectFactory.ANY_GITHUB_USER_NAME;
-import static dev.coding.springboot.demo.github.common.TestObjectFactory.buildHttpEntity;
+import static dev.coding.springboot.demo.common.TestObjectFactory.anyGithubUser;
+import static dev.coding.springboot.demo.common.TestObjectFactory.anyGithubUserList;
+import static dev.coding.springboot.demo.common.TestObjectFactory.ANY_GITHUB_USER_ID;
+import static dev.coding.springboot.demo.common.TestObjectFactory.ANY_GITHUB_USER_NAME;
+import static dev.coding.springboot.demo.common.TestObjectFactory.buildHttpEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -50,61 +52,61 @@ public class GithubGatewayTest {
 
     @Test
     public void getUserByUsername_returnsRetrievedUser_whenUserRetrievedWithGivenUsername() {
-        final GithubUser userToBeRetrieved = anyGithubUser(ANY_GITHUB_USER_ID, ANY_GITHUB_USER_NAME);
+        final User userToBeRetrieved = anyGithubUser(ANY_GITHUB_USER_ID, ANY_GITHUB_USER_NAME);
 
-        when(restTemplate.exchange(buildGetUserByUsernameUri(ANY_GITHUB_USER_NAME), GET, buildHttpEntity(), GithubUser.class)).thenReturn(ok(userToBeRetrieved));
-        final GithubUser userRetrieved = githubGateway.getUserByUsername(ANY_GITHUB_USER_NAME).get();
+        when(restTemplate.exchange(buildGetUserByUsernameUri(ANY_GITHUB_USER_NAME), GET, buildHttpEntity(), User.class)).thenReturn(ok(userToBeRetrieved));
+        final User userRetrieved = githubGateway.getUserByUsername(ANY_GITHUB_USER_NAME).get();
 
         assertThat(userRetrieved).isEqualTo(userToBeRetrieved);
     }
 
     @Test
     public void getUserByUsername_returnsEmpty_whenNotFoundExceptionReceived() {
-        when(restTemplate.exchange(buildGetUserByUsernameUri(ANY_GITHUB_USER_NAME), GET, buildHttpEntity(), GithubUser.class))
+        when(restTemplate.exchange(buildGetUserByUsernameUri(ANY_GITHUB_USER_NAME), GET, buildHttpEntity(), User.class))
                 .thenThrow(NotFound.class);
 
-        final Optional<GithubUser> userRetrieved = githubGateway.getUserByUsername(ANY_GITHUB_USER_NAME);
+        final Optional<User> userRetrieved = githubGateway.getUserByUsername(ANY_GITHUB_USER_NAME);
 
         assertThat(userRetrieved.isEmpty()).isTrue();
     }
 
     @Test
     public void getUserByUsername_returnsEmpty_whenBadGatewayExceptionReceived() {
-        when(restTemplate.exchange(buildGetUserByUsernameUri(ANY_GITHUB_USER_NAME), GET, buildHttpEntity(), GithubUser.class))
+        when(restTemplate.exchange(buildGetUserByUsernameUri(ANY_GITHUB_USER_NAME), GET, buildHttpEntity(), User.class))
                 .thenThrow(BadGateway.class);
 
-        final Optional<GithubUser> userRetrieved = githubGateway.getUserByUsername(ANY_GITHUB_USER_NAME);
+        final Optional<User> userRetrieved = githubGateway.getUserByUsername(ANY_GITHUB_USER_NAME);
 
         assertThat(userRetrieved.isEmpty()).isTrue();
     }
 
     @Test
     public void getUsers_returnsRetrievedUsers_whenUsersRetrieved() {
-        final GithubUser[] usersToBeRetrieved = anyGithubUserList(3);
+        final User[] usersToBeRetrieved = anyGithubUserList(3);
 
-        when(restTemplate.exchange(buildGetUsersUri(), GET, buildHttpEntity(), GithubUser[].class))
+        when(restTemplate.exchange(buildGetUsersUri(), GET, buildHttpEntity(), User[].class))
                 .thenReturn(ok(usersToBeRetrieved));
-        final GithubUser[] usersRetrieved = githubGateway.getUsers().get();
+        final User[] usersRetrieved = githubGateway.getUsers().get();
 
-        assertThat(usersRetrieved).isEqualTo(usersToBeRetrieved);
+        Assertions.assertThat(usersRetrieved).isEqualTo(usersToBeRetrieved);
     }
 
     @Test
     public void getUsers_returnsEmpty_whenNotFoundExceptionReceived() {
-        when(restTemplate.exchange(buildGetUsersUri(), GET, buildHttpEntity(), GithubUser[].class))
+        when(restTemplate.exchange(buildGetUsersUri(), GET, buildHttpEntity(), User[].class))
                 .thenThrow(NotFound.class);
 
-        final Optional<GithubUser[]> usersRetrieved = githubGateway.getUsers();
+        final Optional<User[]> usersRetrieved = githubGateway.getUsers();
 
         assertThat(usersRetrieved.isEmpty()).isTrue();
     }
 
     @Test
     public void getUsers_returnsEmpty_whenBadGatewayExceptionReceived() {
-        when(restTemplate.exchange(buildGetUsersUri(), GET, buildHttpEntity(), GithubUser[].class))
+        when(restTemplate.exchange(buildGetUsersUri(), GET, buildHttpEntity(), User[].class))
                 .thenThrow(BadGateway.class);
 
-        final Optional<GithubUser[]> usersRetrieved = githubGateway.getUsers();
+        final Optional<User[]> usersRetrieved = githubGateway.getUsers();
 
         assertThat(usersRetrieved.isEmpty()).isTrue();
     }

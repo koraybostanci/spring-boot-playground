@@ -1,8 +1,8 @@
 package dev.coding.springboot.demo.github;
 
 import dev.coding.springboot.configuration.ServiceEndpointProperties;
+import dev.coding.springboot.demo.domain.User;
 import dev.coding.springboot.gateway.RestGateway;
-import dev.coding.springboot.demo.github.domain.GithubUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -30,27 +30,27 @@ public class GithubGateway extends RestGateway {
         super(serviceEndpointProperties.getGithub(), restTemplate);
     }
 
-    public Optional<GithubUser[]> getUsers() {
+    public Optional<User[]> getUsers() {
         final URI uri = buildPathUri(PATH_KEY_USERS);
 
         try {
-            final ResponseEntity<GithubUser[]> responseEntity = get(uri, GithubUser[].class);
+            final ResponseEntity<User[]> responseEntity = get(uri, User[].class);
             return of(responseEntity.getBody());
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            LOGGER.warn(format("Github Users can not be retrieved due to [%s]", ex.getMessage()));
+            LOGGER.warn(format("Users can not be retrieved due to [%s]", ex.getMessage()));
         }
 
         return empty();
     }
 
-    public Optional<GithubUser> getUserByUsername(final String username) {
+    public Optional<User> getUserByUsername(final String username) {
         final URI uri = buildPathUri(PATH_KEY_USER_BY_USERNAME, username);
 
         try {
-            final ResponseEntity<GithubUser> responseEntity = get(uri, GithubUser.class);
+            final ResponseEntity<User> responseEntity = get(uri, User.class);
             return of(responseEntity.getBody());
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            LOGGER.warn(format("Github User with username=[%s] can not be retrieved due to [%s]", username, ex.getMessage()));
+            LOGGER.warn(format("User with username=[%s] can not be retrieved due to [%s]", username, ex.getMessage()));
         }
         return empty();
     }

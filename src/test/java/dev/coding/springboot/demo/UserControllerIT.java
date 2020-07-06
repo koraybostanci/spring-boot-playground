@@ -1,6 +1,5 @@
-package dev.coding.springboot.demo.github;
+package dev.coding.springboot.demo;
 
-import static dev.coding.springboot.demo.github.common.TestObjectFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -15,7 +14,10 @@ import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.coding.springboot.configuration.ServiceEndpointProperties;
-import dev.coding.springboot.demo.github.domain.GithubUser;
+import dev.coding.springboot.demo.common.TestObjectFactory;
+import dev.coding.springboot.demo.domain.User;
+import dev.coding.springboot.demo.github.GithubGateway;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +39,7 @@ import java.util.Optional;
 @ActiveProfiles("integration-test")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class GithubControllerIT {
+public class UserControllerIT {
 
     private static final String PATH_USERS = "/users";
     private static final String PATH_USER_BY_USERNAME = "/users/{username}";
@@ -66,12 +68,12 @@ public class GithubControllerIT {
 
     @Test
     public void getUserByUsername_returnsOkAndRetrievedUser_whenUserRetrieved() throws Exception {
-        final GithubUser userToBeRetrieved = anyGithubUser(ANY_GITHUB_USER_ID, ANY_GITHUB_USER_NAME);
-        when(githubGateway.getUserByUsername(ANY_GITHUB_USER_NAME)).thenReturn(Optional.of(userToBeRetrieved));
+        final User userToBeRetrieved = TestObjectFactory.anyGithubUser(TestObjectFactory.ANY_GITHUB_USER_ID, TestObjectFactory.ANY_GITHUB_USER_NAME);
+        when(githubGateway.getUserByUsername(TestObjectFactory.ANY_GITHUB_USER_NAME)).thenReturn(Optional.of(userToBeRetrieved));
 
-        final MockHttpServletResponse response = performHttpGet(buildUri(PATH_USER_BY_USERNAME, ANY_GITHUB_USER_NAME), OK);
+        final MockHttpServletResponse response = performHttpGet(buildUri(PATH_USER_BY_USERNAME, TestObjectFactory.ANY_GITHUB_USER_NAME), OK);
 
-        final GithubUser userRetrieved = objectMapper.readValue(response.getContentAsString(), GithubUser.class);
+        final User userRetrieved = objectMapper.readValue(response.getContentAsString(), User.class);
 
         assertThat(response.getStatus()).isEqualTo(OK.value());
         assertThat(userRetrieved).isEqualTo(userToBeRetrieved);
@@ -79,9 +81,9 @@ public class GithubControllerIT {
 
     @Test
     public void getUserByUsername_returnsNotFound_whenNoUserRetrieved() throws Exception {
-        when(githubGateway.getUserByUsername(ANY_GITHUB_USER_NAME)).thenReturn(Optional.empty());
+        when(githubGateway.getUserByUsername(TestObjectFactory.ANY_GITHUB_USER_NAME)).thenReturn(Optional.empty());
 
-        final MockHttpServletResponse response = performHttpGet(buildUri(PATH_USER_BY_USERNAME, ANY_GITHUB_USER_NAME), NOT_FOUND);
+        final MockHttpServletResponse response = performHttpGet(buildUri(PATH_USER_BY_USERNAME, TestObjectFactory.ANY_GITHUB_USER_NAME), NOT_FOUND);
 
         assertThat(response.getStatus()).isEqualTo(NOT_FOUND.value());
         assertThat(response.getContentAsString()).isEmpty();
@@ -89,15 +91,15 @@ public class GithubControllerIT {
 
     @Test
     public void getUsers_returnsOkAndRetrievedUsers_whenUsersRetrieved() throws Exception {
-        final GithubUser[] usersToBeRetrieved = anyGithubUserList(3);
+        final User[] usersToBeRetrieved = TestObjectFactory.anyGithubUserList(3);
         when(githubGateway.getUsers()).thenReturn(Optional.of(usersToBeRetrieved));
 
         final MockHttpServletResponse response = performHttpGet(buildUri(PATH_USERS), OK);
 
-        final GithubUser[] usersRetrieved = objectMapper.readValue(response.getContentAsString(), GithubUser[].class);
+        final User[] usersRetrieved = objectMapper.readValue(response.getContentAsString(), User[].class);
 
         assertThat(response.getStatus()).isEqualTo(OK.value());
-        assertThat(usersRetrieved).isEqualTo(usersToBeRetrieved);
+        Assertions.assertThat(usersRetrieved).isEqualTo(usersToBeRetrieved);
     }
 
     @Test

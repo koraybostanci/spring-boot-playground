@@ -1,6 +1,6 @@
-package dev.coding.springboot.demo.github.common;
+package dev.coding.springboot.demo.common;
 
-import dev.coding.springboot.demo.github.domain.GithubUser;
+import dev.coding.springboot.demo.domain.User;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
@@ -13,8 +13,8 @@ public class TestObjectFactory {
     public static final String ANY_GITHUB_USER_ID = "anyUserId";
     public static final String ANY_GITHUB_USER_NAME = "anyUserName";
 
-    public static GithubUser[] anyGithubUserList(final int userCount) {
-        final GithubUser[] users = new GithubUser[userCount];
+    public static User[] anyGithubUserList(final int userCount) {
+        final User[] users = new User[userCount];
         for (int i = 0; i < userCount; i++) {
             users[i] = anyGithubUser(
                     format("%s-%s", ANY_GITHUB_USER_ID, i),
@@ -24,8 +24,8 @@ public class TestObjectFactory {
         return users;
     }
 
-    public static GithubUser anyGithubUser(final String id, final String login) {
-        final GithubUser user = new GithubUser();
+    public static User anyGithubUser(final String id, final String login) {
+        final User user = new User();
         user.setId(id);
         user.setLogin(login);
         user.setUrl(login);

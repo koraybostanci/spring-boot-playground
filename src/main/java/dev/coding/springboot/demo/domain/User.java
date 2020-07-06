@@ -1,11 +1,11 @@
-package dev.coding.springboot.demo.github.domain;
+package dev.coding.springboot.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class GithubUser implements Serializable {
+public class User implements Serializable {
 
     @JsonProperty(value = "id")
     private String id;
@@ -44,7 +44,7 @@ public class GithubUser implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GithubUser user = (GithubUser) o;
+        User user = (User) o;
         return id.equals(user.id) &&
                 login.equals(user.login) &&
                 url.equals(user.url);
@@ -57,7 +57,7 @@ public class GithubUser implements Serializable {
 
     @Override
     public String toString() {
-        return "GithubUser{" +
+        return "User{" +
                 "id='" + id + '\'' +
                 ", login='" + login + '\'' +
                 ", url='" + url + '\'' +
