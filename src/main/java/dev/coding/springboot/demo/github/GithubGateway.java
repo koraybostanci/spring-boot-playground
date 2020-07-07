@@ -7,16 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.Optional;
 
-import static java.lang.String.format;
 import static java.util.Optional.empty;
-import static java.util.Optional.of;
 
 @Component
 public class GithubGateway extends RestGateway {
@@ -31,27 +28,28 @@ public class GithubGateway extends RestGateway {
     }
 
     public Optional<User[]> getUsers() {
-        final URI uri = buildPathUri(PATH_KEY_USERS);
+        final URI uri = url.buildPathUri(PATH_KEY_USERS);
 
         try {
-            final ResponseEntity<User[]> responseEntity = get(uri, User[].class);
-            return of(responseEntity.getBody());
-        } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            LOGGER.warn(format("Users can not be retrieved due to [%s]", ex.getMessage()));
+            final ResponseEntity<User[]> responseEntity = http.get(uri, User[].class);
+            return Optional.of(responseEntity.getBody());
+        } catch (final RestClientResponseException ex) {
+            LOGGER.warn("Users can not be retrieved due to [{}]", ex.getMessage());
         }
 
         return empty();
     }
 
     public Optional<User> getUserByUsername(final String username) {
-        final URI uri = buildPathUri(PATH_KEY_USER_BY_USERNAME, username);
+        final URI uri = url.buildPathUri(PATH_KEY_USER_BY_USERNAME, username);
 
         try {
-            final ResponseEntity<User> responseEntity = get(uri, User.class);
-            return of(responseEntity.getBody());
-        } catch (HttpClientErrorException | HttpServerErrorException ex) {
-            LOGGER.warn(format("User with username=[%s] can not be retrieved due to [%s]", username, ex.getMessage()));
+            final ResponseEntity<User> responseEntity = http.get(uri, User.class);
+            return Optional.of(responseEntity.getBody());
+        } catch (final RestClientResponseException ex) {
+            LOGGER.warn("User not found with username [{}] due to [{}]", username, ex.getMessage());
         }
+
         return empty();
     }
 

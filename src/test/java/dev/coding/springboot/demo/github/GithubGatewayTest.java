@@ -3,7 +3,6 @@ package dev.coding.springboot.demo.github;
 import dev.coding.springboot.configuration.ServiceEndpoint;
 import dev.coding.springboot.configuration.ServiceEndpointProperties;
 import dev.coding.springboot.demo.domain.User;
-import dev.coding.springboot.demo.github.GithubGateway;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

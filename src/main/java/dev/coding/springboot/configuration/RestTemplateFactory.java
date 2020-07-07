@@ -20,6 +20,7 @@ public class RestTemplateFactory {
     public static RestTemplate getBasicRestTemplate() {
         final RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName(UTF_8.name())));
+        restTemplate.setErrorHandler(new RestTemplateExceptionHandler());
         return restTemplate;
     }
 
