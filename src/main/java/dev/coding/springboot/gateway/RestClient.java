@@ -13,7 +13,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -25,9 +24,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class RestClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestClient.class);
-    private static final String REST_CLIENT_UNSUCCESSFUL_RESPONSE = "RestClient received unsuccessful response [{}]";
-    private static final String REST_CLIENT_NO_RESPONSE = "RestClient didn't receive any response";
-    private static final String REST_CLIENT_ERROR = "RestClient error due to [{}]";
+    private static final String REST_CLIENT_ON_ERROR = "Rest call to [{}] [{}] received error due to [{}]";
+    private static final String REST_CLIENT_ON_BEFORE_CALL = "Calling [{}] [{}]";
+    private static final String REST_CLIENT_ON_AFTER_CALL = "Rest call to [{}] [{}] responded with [{}] [{}]";
 
     private final RestTemplate restTemplate;
 
@@ -67,22 +66,16 @@ public class RestClient {
 
     private <T> ResponseEntity<T> exchange(final HttpMethod httpMethod, final URI uri, final Object data, final Optional<Map<String, String>> headers, final Class<T> responseType) {
         try {
-            return call(httpMethod, uri, data, headers, responseType);
-        } catch (final RestClientException | RestGatewayException ex) {
-            LOGGER.error(REST_CLIENT_ERROR, ex);
-            throw ex;
-        }
-    }
+            LOGGER.debug(REST_CLIENT_ON_BEFORE_CALL, httpMethod.name(), uri);
+            final ResponseEntity<T> responseEntity = restTemplate.exchange(uri, httpMethod, httpEntityOf(data, headers), responseType);
+            LOGGER.debug(REST_CLIENT_ON_AFTER_CALL, httpMethod.name(), uri, responseEntity.getStatusCode(), responseEntity.getBody());
 
-    private <T> ResponseEntity<T> call(final HttpMethod httpMethod, final URI uri, final Object data, final Optional<Map<String, String>> headers, final Class<T> responseType) {
-        final ResponseEntity<T> responseEntity = restTemplate.exchange(uri, httpMethod, httpEntityOf(data, headers), responseType);
-        if (responseEntity == null) {
-            throw new RestGatewayException(REST_CLIENT_NO_RESPONSE);
+            return responseEntity;
+        } catch (final RestClientException ex) {
+            LOGGER.error(REST_CLIENT_ON_ERROR, httpMethod.name(), uri, ex.toString());
         }
-        if (!responseEntity.getStatusCode().is2xxSuccessful()) {
-            throw new RestGatewayException(format(REST_CLIENT_UNSUCCESSFUL_RESPONSE, responseEntity));
-        }
-        return responseEntity;
+
+        return ResponseEntity.of(empty());
     }
 
     private HttpEntity httpEntityOf(final Object data, final Optional<Map<String, String>> customHeaders) {

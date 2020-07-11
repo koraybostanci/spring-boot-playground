@@ -11,23 +11,20 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RestTemplateFactory {
 
-    private static final int CONNECT_TIMEOUT = 1000;
-    private static final int READ_TIMEOUT = 1000;
-
-    private RestTemplateFactory() {
-    }
+    private static final int DEFAULT_CONNECT_TIMEOUT = 1000;
+    private static final int DEFAULT_READ_TIMEOUT = 1000;
 
     public static RestTemplate getBasicRestTemplate() {
-        final RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
+        final RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setRequestFactory(getClientHttpRequestFactory());
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName(UTF_8.name())));
-        restTemplate.setErrorHandler(new RestTemplateExceptionHandler());
         return restTemplate;
     }
 
     private static ClientHttpRequestFactory getClientHttpRequestFactory() {
         final SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(CONNECT_TIMEOUT);
-        requestFactory.setReadTimeout(READ_TIMEOUT);
+        requestFactory.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT);
+        requestFactory.setReadTimeout(DEFAULT_READ_TIMEOUT);
         return requestFactory;
     }
 }

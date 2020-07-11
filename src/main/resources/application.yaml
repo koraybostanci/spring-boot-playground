@@ -21,11 +21,10 @@ management:
           - metrics
           - prometheus
 service-endpoints:
-  github:
-    base-url: "https://api.github.com/"
+  quote:
+    base-url: "https://gturnquist-quoters.cfapps.io/api/"
     paths:
-      users: "users"
-      user-by-username: "users/{username}"
+      random: "random"
 logging:
   level:
     root: warn

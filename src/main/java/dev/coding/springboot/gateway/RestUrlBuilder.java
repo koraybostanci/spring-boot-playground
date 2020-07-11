@@ -6,7 +6,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
-import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
 public class RestUrlBuilder {
 
@@ -23,18 +22,22 @@ public class RestUrlBuilder {
     }
 
     public URI getBaseUri() {
-        return fromPath(serviceEndpoint.getBaseUrl()).build().toUri();
+        return getUriComponentsBuilder().build().toUri();
     }
 
-    public URI buildPathUri(final String pathKey) {
+    public URI ofPath(final String pathKey) {
         return getUriComponentsBuilder(pathKey).build().toUri();
     }
 
-    public URI buildPathUri(final String pathKey, final Object... variables) {
+    public URI ofPath(final String pathKey, final Object... variables) {
         return getUriComponentsBuilder(pathKey).buildAndExpand(variables).toUri();
     }
 
-    public UriComponentsBuilder getUriComponentsBuilder(final String pathKey) {
-        return fromHttpUrl(serviceEndpoint.getBaseUrl()).path(serviceEndpoint.getPaths().get(pathKey));
+    private UriComponentsBuilder getUriComponentsBuilder() {
+        return fromHttpUrl(serviceEndpoint.getBaseUrl());
+    }
+
+    private UriComponentsBuilder getUriComponentsBuilder(final String pathKey) {
+        return getUriComponentsBuilder().path(serviceEndpoint.getPaths().get(pathKey));
     }
 }

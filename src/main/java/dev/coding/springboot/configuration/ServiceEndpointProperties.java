@@ -12,9 +12,10 @@ import javax.validation.Valid;
 public class ServiceEndpointProperties {
 
     @Valid
-    private ServiceEndpoint github = new ServiceEndpoint();
+    private ServiceEndpoint quote = new ServiceEndpoint();
 
-    public ServiceEndpoint getGithub() {
-        return github;
+    public ServiceEndpoint getQuote() {
+        return quote;
     }
+
 }

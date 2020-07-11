@@ -11,7 +11,6 @@ public class ServiceEndpoint {
     @NotBlank
     private String baseUrl;
 
-    @NotBlank
     private Map<String, String> paths;
 
     public String getBaseUrl() {
