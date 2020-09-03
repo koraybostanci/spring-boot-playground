@@ -1,4 +1,9 @@
 spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
   application:
     name: @project.name@
   redis:
@@ -25,3 +30,8 @@ services:
     base-url: "https://api.github.com/"
     paths:
       users: "users"
+rabbitmq:
+  exchange-name: ha.messages
+  messages:
+    routing-key: ha.messages.message-received.key
+    queue-name: ha.messages.message-received.queue
