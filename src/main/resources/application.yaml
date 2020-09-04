@@ -32,7 +32,11 @@ services:
       users: "users"
 rabbitmq:
   exchange-name: ha.messages
-  messages:
-    routing-key: ha.messages.message-received.key
-    queue-name: ha.messages.message-received.queue
-    concurrent-consumer-count: 10
+  message-received:
+    routing-key: received
+    queue-name: ha.messages.received
+    concurrent-consumer-count: 2
+  message-dead-letter:
+    routing-key: dead-letter
+    queue-name: ha.messages.dead-letter
+    concurrent-consumer-count: 1

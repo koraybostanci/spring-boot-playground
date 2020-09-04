@@ -13,7 +13,9 @@ public class RabbitProperties {
     @NotNull
     private String exchangeName;
 
-    private Entry messages = new Entry();
+    private Entry messageReceived = new Entry();
+
+    private Entry messageDeadLetter = new Entry();
 
     public String getExchangeName() {
         return exchangeName;
@@ -23,12 +25,20 @@ public class RabbitProperties {
         this.exchangeName = exchangeName;
     }
 
-    public Entry getMessages() {
-        return messages;
+    public Entry getMessageReceived() {
+        return messageReceived;
     }
 
-    public void setMessages(Entry messages) {
-        this.messages = messages;
+    public void setMessageReceived(Entry messageReceived) {
+        this.messageReceived = messageReceived;
+    }
+
+    public Entry getMessageDeadLetter() {
+        return messageDeadLetter;
+    }
+
+    public void setMessageDeadLetter(Entry messageDeadLetter) {
+        this.messageDeadLetter = messageDeadLetter;
     }
 
     @Validated

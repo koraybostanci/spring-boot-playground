@@ -32,7 +32,7 @@ public class MessagePublisher implements EventPublisher<String> {
 
         try {
             rabbitTemplate.convertAndSend(rabbitProperties.getExchangeName(),
-                    rabbitProperties.getMessages().getRoutingKey(),
+                    rabbitProperties.getMessageReceived().getRoutingKey(),
                     toMessage(data));
             LOGGER.info("Successfully published message to rabbitmq [{}]", data);
         } catch (JsonProcessingException | AmqpException ex) {
