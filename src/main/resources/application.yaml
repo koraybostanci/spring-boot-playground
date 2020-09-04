@@ -35,3 +35,4 @@ rabbitmq:
   messages:
     routing-key: ha.messages.message-received.key
     queue-name: ha.messages.message-received.queue
+    concurrent-consumer-count: 10

@@ -1,16 +1,15 @@
 package dev.coding.springboot.configuration;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.retry.support.RetryTemplate;
 
 import static org.springframework.amqp.core.AcknowledgeMode.MANUAL;
-import static org.springframework.amqp.core.Binding.DestinationType.QUEUE;
+import static org.springframework.amqp.core.BindingBuilder.bind;
 
 @Configuration
 public class AmqpConfiguration {
@@ -33,18 +32,24 @@ public class AmqpConfiguration {
 
     @Bean
     public Binding bindingMessageReceived() {
-        return new Binding(rabbitProperties.getMessages().getQueueName(),
-                QUEUE,
-                rabbitProperties.getExchangeName(),
-                rabbitProperties.getMessages().getRoutingKey(),null);
+        return bind(queueMessageReceived())
+                .to(exchangeMessages())
+                .with(rabbitProperties.getMessages().getRoutingKey())
+                .noargs();
     }
 
     @Bean
-    public SimpleRabbitListenerContainerFactory createSimpleRabbitListenerContainerFactory() {
+    public SimpleRabbitListenerContainerFactory createMessagesRabbitListenerContainerFactory() {
+        return createSimpleRabbitListenerContainerFactory(
+                rabbitProperties.getMessages().getConcurrentConsumerCount());
+    }
+
+    public SimpleRabbitListenerContainerFactory createSimpleRabbitListenerContainerFactory(final int concurrentConsumerCount) {
         final SimpleRabbitListenerContainerFactory containerFactory = new SimpleRabbitListenerContainerFactory();
-        containerFactory.setConcurrentConsumers(10);
+        containerFactory.setConcurrentConsumers(concurrentConsumerCount);
         containerFactory.setPrefetchCount(1);
         containerFactory.setAcknowledgeMode(MANUAL);
+        containerFactory.setChannelTransacted(true);
         return containerFactory;
     }
 

@@ -3,6 +3,7 @@ package dev.coding.springboot.configuration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Validated
@@ -39,6 +40,9 @@ public class RabbitProperties {
         @NotNull
         private String routingKey;
 
+        @Min(1)
+        private int concurrentConsumerCount;
+
         public String getQueueName() {
             return queueName;
         }
@@ -53,6 +57,14 @@ public class RabbitProperties {
 
         public void setRoutingKey(String routingKey) {
             this.routingKey = routingKey;
+        }
+
+        public int getConcurrentConsumerCount() {
+            return concurrentConsumerCount;
+        }
+
+        public void setConcurrentConsumerCount(int concurrentConsumerCount) {
+            this.concurrentConsumerCount = concurrentConsumerCount;
         }
     }
 }
