@@ -1,6 +1,7 @@
 package dev.coding.springboot.rest.controller;
 
 import dev.coding.springboot.event.EventPublisher;
+import dev.coding.springboot.event.message.Task;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    private final EventPublisher eventPublisher;
+    private final EventPublisher<Task> taskPublisher;
 
-    public TestController(EventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
+    public TestController(EventPublisher<Task> taskPublisher) {
+        this.taskPublisher = taskPublisher;
     }
 
     @GetMapping("/test")
@@ -19,9 +20,11 @@ public class TestController {
         return "Ok";
     }
 
-    @GetMapping("/send/{data}")
-    public void sendMessage(@PathVariable("data") String data) {
-        eventPublisher.publish(data);
+    @GetMapping("/send/{name}")
+    public void sendTask(@PathVariable("name") String name) {
+        final Task task = new Task();
+        task.setName(name);
+        taskPublisher.publish(task);
     }
 
 }

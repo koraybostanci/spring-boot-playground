@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties({
         ServiceEndpointProperties.class,
-        RabbitProperties.class
+        RabbitMqProperties.class
 })
 public class SpringConfigurationProperties {
 }

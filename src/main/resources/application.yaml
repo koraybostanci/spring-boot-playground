@@ -4,6 +4,12 @@ spring:
     port: 5672
     username: guest
     password: guest
+    listener:
+      simple:
+        acknowledge-mode: auto
+        retry:
+          enabled: true
+          max-attempts: 3
   application:
     name: @project.name@
   redis:
@@ -31,12 +37,10 @@ services:
     paths:
       users: "users"
 rabbitmq:
-  exchange-name: ha.messages
-  message-received:
-    routing-key: received
-    queue-name: ha.messages.received
-    concurrent-consumer-count: 2
-  message-dead-letter:
-    routing-key: dead-letter
-    queue-name: ha.messages.dead-letter
-    concurrent-consumer-count: 1
+  exchange-name: ha.tasks
+  tasks-received:
+    routing-key: tasks-received
+    queue-name: ha.tasks.received
+  tasks-dead-letter:
+    routing-key: tasks-dead-letter
+    queue-name: ha.tasks.dead-letter

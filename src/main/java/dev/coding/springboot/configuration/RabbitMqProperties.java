@@ -3,19 +3,21 @@ package dev.coding.springboot.configuration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.Min;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Validated
 @ConfigurationProperties("rabbitmq")
-public class RabbitProperties {
+public class RabbitMqProperties {
 
     @NotNull
     private String exchangeName;
 
-    private Entry messageReceived = new Entry();
+    @Valid
+    private Entry tasksReceived = new Entry();
 
-    private Entry messageDeadLetter = new Entry();
+    @Valid
+    private Entry tasksDeadLetter = new Entry();
 
     public String getExchangeName() {
         return exchangeName;
@@ -25,20 +27,20 @@ public class RabbitProperties {
         this.exchangeName = exchangeName;
     }
 
-    public Entry getMessageReceived() {
-        return messageReceived;
+    public Entry getTasksReceived() {
+        return tasksReceived;
     }
 
-    public void setMessageReceived(Entry messageReceived) {
-        this.messageReceived = messageReceived;
+    public void setTasksReceived(Entry tasksReceived) {
+        this.tasksReceived = tasksReceived;
     }
 
-    public Entry getMessageDeadLetter() {
-        return messageDeadLetter;
+    public Entry getTasksDeadLetter() {
+        return tasksDeadLetter;
     }
 
-    public void setMessageDeadLetter(Entry messageDeadLetter) {
-        this.messageDeadLetter = messageDeadLetter;
+    public void setTasksDeadLetter(Entry tasksDeadLetter) {
+        this.tasksDeadLetter = tasksDeadLetter;
     }
 
     @Validated
@@ -49,9 +51,6 @@ public class RabbitProperties {
 
         @NotNull
         private String routingKey;
-
-        @Min(1)
-        private int concurrentConsumerCount;
 
         public String getQueueName() {
             return queueName;
@@ -67,14 +66,6 @@ public class RabbitProperties {
 
         public void setRoutingKey(String routingKey) {
             this.routingKey = routingKey;
-        }
-
-        public int getConcurrentConsumerCount() {
-            return concurrentConsumerCount;
-        }
-
-        public void setConcurrentConsumerCount(int concurrentConsumerCount) {
-            this.concurrentConsumerCount = concurrentConsumerCount;
         }
     }
 }
