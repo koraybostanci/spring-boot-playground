@@ -1,7 +1,7 @@
 package dev.coding.springboot.rest.controller;
 
 import dev.coding.springboot.event.EventPublisher;
-import dev.coding.springboot.event.message.Task;
+import dev.coding.springboot.event.task.Task;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;

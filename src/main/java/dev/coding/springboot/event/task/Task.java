@@ -1,4 +1,4 @@
-package dev.coding.springboot.event.message;
+package dev.coding.springboot.event.task;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;

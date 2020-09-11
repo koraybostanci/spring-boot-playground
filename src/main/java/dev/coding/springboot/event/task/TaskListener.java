@@ -1,4 +1,4 @@
-package dev.coding.springboot.event.message;
+package dev.coding.springboot.event.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

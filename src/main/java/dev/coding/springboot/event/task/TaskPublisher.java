@@ -1,4 +1,4 @@
-package dev.coding.springboot.event.message;
+package dev.coding.springboot.event.task;
 
 import dev.coding.springboot.configuration.RabbitMqProperties;
 import dev.coding.springboot.event.EventPublisher;
