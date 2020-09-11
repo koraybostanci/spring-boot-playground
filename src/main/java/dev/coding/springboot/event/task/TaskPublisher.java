@@ -24,14 +24,16 @@ public class TaskPublisher implements EventPublisher<Task> {
     }
 
     @Override
-    public void publish(final Task task) {
+    public boolean publish(final Task task) {
         LOGGER.info("Publishing message to rabbitmq [{}]", task);
 
         try {
             rabbitTemplate.convertAndSend(exchangeName, routingKey, task);
             LOGGER.info("Successfully published message to rabbitmq [{}]", task);
+            return true;
         } catch (final AmqpException ex) {
             LOGGER.error("Failed to publish message [{}] to rabbitmq due to [{}]", task, ex);
         }
+        return false;
     }
 }

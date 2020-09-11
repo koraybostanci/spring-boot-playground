@@ -14,10 +14,14 @@ public class RabbitMqProperties {
     private String exchangeName;
 
     @Valid
-    private Entry tasksReceived = new Entry();
+    private TasksReceived tasksReceived = new TasksReceived();
 
     @Valid
-    private Entry tasksDeadLetter = new Entry();
+    private TasksDeadLetter tasksDeadLetter = new TasksDeadLetter();
+
+    public static class TasksReceived extends Entry { }
+
+    public static class TasksDeadLetter extends Entry { }
 
     public String getExchangeName() {
         return exchangeName;
@@ -31,7 +35,7 @@ public class RabbitMqProperties {
         return tasksReceived;
     }
 
-    public void setTasksReceived(Entry tasksReceived) {
+    public void setTasksReceived(TasksReceived tasksReceived) {
         this.tasksReceived = tasksReceived;
     }
 
@@ -39,7 +43,7 @@ public class RabbitMqProperties {
         return tasksDeadLetter;
     }
 
-    public void setTasksDeadLetter(Entry tasksDeadLetter) {
+    public void setTasksDeadLetter(TasksDeadLetter tasksDeadLetter) {
         this.tasksDeadLetter = tasksDeadLetter;
     }
 
