@@ -1,6 +1,6 @@
 package dev.coding.springboot.event.task;
 
-import dev.coding.springboot.configuration.RabbitMqProperties;
+import dev.coding.springboot.configuration.RabbitMQProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +13,7 @@ import static dev.coding.springboot.TestConstants.*;
 import static dev.coding.springboot.TestObjectFactory.anyTaskWithName;
 import static dev.coding.springboot.TestObjectFactory.getTasksReceivedEntry;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TaskPublisherTest {
@@ -23,7 +22,7 @@ public class TaskPublisherTest {
     private RabbitTemplate rabbitTemplate;
 
     @Mock
-    private RabbitMqProperties rabbitMqProperties;
+    private RabbitMQProperties rabbitMqProperties;
 
     private TaskPublisher taskPublisher;
 
@@ -40,7 +39,9 @@ public class TaskPublisherTest {
         final Task task = anyTaskWithName(ANY_TASK_NAME);
 
         final boolean result = taskPublisher.publish(task);
+
         assertThat(result).isTrue();
+        verify(rabbitTemplate).convertAndSend(rabbitMqProperties.getExchangeName(), rabbitMqProperties.getTasksReceived().getRoutingKey(), task);
     }
 
     @Test
@@ -50,6 +51,7 @@ public class TaskPublisherTest {
         doThrow(AmqpException.class).when(rabbitTemplate).convertAndSend(ANY_EXCHANGE_NAME, ANY_ROUTING_KEY, task);
 
         final boolean result = taskPublisher.publish(task);
+
         assertThat(result).isFalse();
     }
 }

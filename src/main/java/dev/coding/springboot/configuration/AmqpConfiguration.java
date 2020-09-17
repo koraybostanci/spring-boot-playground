@@ -16,9 +16,9 @@ import static org.springframework.amqp.core.QueueBuilder.durable;
 @Configuration
 public class AmqpConfiguration {
 
-    private final RabbitMqProperties rabbitMqProperties;
+    private final RabbitMQProperties rabbitMqProperties;
 
-    public AmqpConfiguration(RabbitMqProperties rabbitMqProperties) {
+    public AmqpConfiguration(final RabbitMQProperties rabbitMqProperties) {
         this.rabbitMqProperties = rabbitMqProperties;
     }
 
@@ -31,17 +31,17 @@ public class AmqpConfiguration {
     public Queue queueTasksReceived() {
         return durable(rabbitMqProperties.getTasksReceived().getQueueName())
                 .deadLetterExchange(rabbitMqProperties.getExchangeName())
-                .deadLetterRoutingKey(rabbitMqProperties.getTasksDeadLetter().getRoutingKey())
+                .deadLetterRoutingKey(rabbitMqProperties.getDeadLetter().getRoutingKey())
                 .build();
     }
 
     @Bean
-    public Queue queueTaskDeadLetter() {
-        return durable(rabbitMqProperties.getTasksDeadLetter().getQueueName()).build();
+    public Queue queueDeadLetter() {
+        return durable(rabbitMqProperties.getDeadLetter().getQueueName()).build();
     }
 
     @Bean
-    public Binding bindingTaskReceived() {
+    public Binding bindingTasksReceived() {
         return bind(queueTasksReceived())
                 .to(exchangeTasks())
                 .with(rabbitMqProperties.getTasksReceived().getRoutingKey())
@@ -50,9 +50,9 @@ public class AmqpConfiguration {
 
     @Bean
     public Binding bindingDeadLetter() {
-        return bind(queueTaskDeadLetter())
+        return bind(queueDeadLetter())
                 .to(exchangeTasks())
-                .with(rabbitMqProperties.getTasksDeadLetter().getRoutingKey())
+                .with(rabbitMqProperties.getDeadLetter().getRoutingKey())
                 .noargs();
     }
 

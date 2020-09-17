@@ -17,7 +17,7 @@ import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 @ConfigurationProperties("services")
 public class ServiceEndpointProperties {
 
-    private Service github;
+    private Service github = new Service();
 
     @Getter
     @Setter

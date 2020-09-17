@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Validated
 @ConfigurationProperties("rabbitmq")
-public class RabbitMqProperties {
+public class RabbitMQProperties {
 
     @NotNull
     private String exchangeName;
@@ -17,11 +17,11 @@ public class RabbitMqProperties {
     private TasksReceived tasksReceived = new TasksReceived();
 
     @Valid
-    private TasksDeadLetter tasksDeadLetter = new TasksDeadLetter();
+    private DeadLetter deadLetter = new DeadLetter();
 
     public static class TasksReceived extends Entry { }
 
-    public static class TasksDeadLetter extends Entry { }
+    public static class DeadLetter extends Entry { }
 
     public String getExchangeName() {
         return exchangeName;
@@ -39,12 +39,12 @@ public class RabbitMqProperties {
         this.tasksReceived = tasksReceived;
     }
 
-    public Entry getTasksDeadLetter() {
-        return tasksDeadLetter;
+    public Entry getDeadLetter() {
+        return deadLetter;
     }
 
-    public void setTasksDeadLetter(TasksDeadLetter tasksDeadLetter) {
-        this.tasksDeadLetter = tasksDeadLetter;
+    public void setDeadLetter(DeadLetter deadLetter) {
+        this.deadLetter = deadLetter;
     }
 
     @Validated

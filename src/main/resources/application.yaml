@@ -10,6 +10,8 @@ spring:
         retry:
           enabled: true
           max-attempts: 3
+        prefetch: 1
+        concurrency: 10
   application:
     name: @project.name@
   redis:
@@ -39,8 +41,8 @@ services:
 rabbitmq:
   exchange-name: ha.tasks
   tasks-received:
-    routing-key: tasks-received
+    routing-key: received
     queue-name: ha.tasks.received
-  tasks-dead-letter:
-    routing-key: tasks-dead-letter
+  dead-letter:
+    routing-key: dead-letter
     queue-name: ha.tasks.dead-letter
