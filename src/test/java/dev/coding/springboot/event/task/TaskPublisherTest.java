@@ -47,7 +47,10 @@ public class TaskPublisherTest {
     void publish_fails_whenAmqpException() {
         final Task task = anyTaskWithName(ANY_TASK_NAME);
 
-        doThrow(AmqpException.class).when(rabbitTemplate).convertAndSend(ANY_EXCHANGE_NAME, ANY_ROUTING_KEY, task);
+        doThrow(AmqpException.class).when(rabbitTemplate).convertAndSend(
+                rabbitMqProperties.getExchangeName(),
+                rabbitMqProperties.getTasksReceived().getRoutingKey(),
+                task);
 
         final boolean result = taskPublisher.publish(task);
 
