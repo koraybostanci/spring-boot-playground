@@ -7,7 +7,7 @@ import static dev.coding.springboot.TestConstants.ANY_ROUTING_KEY;
 
 public class TestObjectFactory {
 
-    public static TasksReceived getTasksReceivedEntry() {
+    public static TasksReceived anyTasksReceivedEntry() {
         final TasksReceived tasksReceived = new TasksReceived();
         tasksReceived.setRoutingKey(ANY_ROUTING_KEY);
         return tasksReceived;

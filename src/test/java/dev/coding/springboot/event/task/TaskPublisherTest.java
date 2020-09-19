@@ -10,8 +10,7 @@ import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import static dev.coding.springboot.TestConstants.*;
-import static dev.coding.springboot.TestObjectFactory.anyTaskWithName;
-import static dev.coding.springboot.TestObjectFactory.getTasksReceivedEntry;
+import static dev.coding.springboot.TestObjectFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -29,7 +28,7 @@ public class TaskPublisherTest {
     @BeforeEach
     public void beforeEach() {
         when(rabbitMqProperties.getExchangeName()).thenReturn(ANY_EXCHANGE_NAME);
-        when(rabbitMqProperties.getTasksReceived()).thenReturn(getTasksReceivedEntry());
+        when(rabbitMqProperties.getTasksReceived()).thenReturn(anyTasksReceivedEntry());
 
         taskPublisher = new TaskPublisher(rabbitTemplate, rabbitMqProperties);
     }
