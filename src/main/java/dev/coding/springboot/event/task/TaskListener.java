@@ -23,8 +23,9 @@ public class TaskListener  {
 
     @RabbitListener(queues = TASKS_RECEIVED_QUEUE_NAME)
     public void onMessage(final Message message) throws IOException {
-        LOGGER.info("Message received [{}]", message);
+        LOGGER.debug("Message received [{}]", message);
         final Task task = objectMapper.readValue(message.getBody(), Task.class);
+        LOGGER.info("Task received [{}]", task);
     }
 
 }
