@@ -3,7 +3,7 @@ package dev.coding.springboot.configuration;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -28,10 +28,10 @@ public class AmqpConfiguration {
     }
 
     @Bean
-    public Queue queueTasksReceived() {
-        return durable(rabbitMqProperties.getTasksReceived().getQueueName())
+    public Queue queueReceived() {
+        return durable(rabbitMqProperties.getReceived().getQueueName())
                 .deadLetterExchange(rabbitMqProperties.getExchangeName())
-                .deadLetterRoutingKey(rabbitMqProperties.getDeadLetter().getRoutingKey())
+                .deadLetterRoutingKey(rabbitMqProperties.getReceived().getRoutingKey())
                 .build();
     }
 
@@ -41,10 +41,10 @@ public class AmqpConfiguration {
     }
 
     @Bean
-    public Binding bindingTasksReceived() {
-        return bind(queueTasksReceived())
+    public Binding bindingReceived() {
+        return bind(queueReceived())
                 .to(exchangeTasks())
-                .with(rabbitMqProperties.getTasksReceived().getRoutingKey())
+                .with(rabbitMqProperties.getReceived().getRoutingKey())
                 .noargs();
     }
 
@@ -57,7 +57,7 @@ public class AmqpConfiguration {
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+    public RabbitTemplate rabbitTemplate(final CachingConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
         return rabbitTemplate;
