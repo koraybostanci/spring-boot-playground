@@ -17,11 +17,11 @@ public class RabbitMQProperties {
     @NotNull
     private String exchangeName;
     @Valid
-    private Received received = new Received();
+    private TaskReceived taskReceived = new TaskReceived();
     @Valid
     private DeadLetter deadLetter = new DeadLetter();
 
-    public static class Received extends Entry { }
+    public static class TaskReceived extends Entry { }
 
     public static class DeadLetter extends Entry { }
 

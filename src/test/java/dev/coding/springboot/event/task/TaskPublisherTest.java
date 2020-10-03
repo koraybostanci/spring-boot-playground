@@ -12,7 +12,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import static dev.coding.springboot.TestConstants.ANY_EXCHANGE_NAME;
 import static dev.coding.springboot.TestConstants.ANY_TASK_NAME;
 import static dev.coding.springboot.TestObjectFactory.anyTaskWithName;
-import static dev.coding.springboot.TestObjectFactory.anyReceivedEntry;
+import static dev.coding.springboot.TestObjectFactory.anyTaskReceivedEntry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -34,7 +34,7 @@ public class TaskPublisherTest {
     @BeforeEach
     public void beforeEach() {
         when(rabbitMqProperties.getExchangeName()).thenReturn(ANY_EXCHANGE_NAME);
-        when(rabbitMqProperties.getReceived()).thenReturn(anyReceivedEntry());
+        when(rabbitMqProperties.getTaskReceived()).thenReturn(anyTaskReceivedEntry());
 
         taskPublisher = new TaskPublisher(rabbitTemplate, rabbitMqProperties);
     }
@@ -48,7 +48,7 @@ public class TaskPublisherTest {
         assertThat(result).isTrue();
         verify(rabbitTemplate).convertAndSend(
                 rabbitMqProperties.getExchangeName(),
-                rabbitMqProperties.getReceived().getRoutingKey(),
+                rabbitMqProperties.getTaskReceived().getRoutingKey(),
                 task);
     }
 

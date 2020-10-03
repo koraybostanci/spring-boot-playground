@@ -5,6 +5,7 @@ import dev.coding.springboot.event.task.Task;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 public class TestController {
@@ -20,7 +21,7 @@ public class TestController {
         return "Ok";
     }
 
-    @PostMapping("/task/{name}")
+    @GetMapping("/task/{name}")
     public void sendTask(@Valid @PathVariable("name") final String name,
                          @Valid @RequestParam(value = "count", defaultValue = "1") final int count) {
         for (int i = 0; i < count; ++i) {

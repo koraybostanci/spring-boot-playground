@@ -46,8 +46,8 @@ public class TaskPublisherIT {
         amqpAdmin.purgeQueue(ANY_QUEUE_NAME, false);
 
         rabbitMQProperties.setExchangeName(ANY_EXCHANGE_NAME);
-        rabbitMQProperties.getReceived().setQueueName(ANY_QUEUE_NAME);
-        rabbitMQProperties.getReceived().setRoutingKey(ANY_ROUTING_KEY);
+        rabbitMQProperties.getTaskReceived().setQueueName(ANY_QUEUE_NAME);
+        rabbitMQProperties.getTaskReceived().setRoutingKey(ANY_ROUTING_KEY);
 
         taskPublisher = new TaskPublisher(rabbitTemplate, rabbitMQProperties);
     }

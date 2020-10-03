@@ -28,10 +28,10 @@ public class AmqpConfiguration {
     }
 
     @Bean
-    public Queue queueReceived() {
-        return durable(rabbitMqProperties.getReceived().getQueueName())
+    public Queue queueTaskReceived() {
+        return durable(rabbitMqProperties.getTaskReceived().getQueueName())
                 .deadLetterExchange(rabbitMqProperties.getExchangeName())
-                .deadLetterRoutingKey(rabbitMqProperties.getReceived().getRoutingKey())
+                .deadLetterRoutingKey(rabbitMqProperties.getTaskReceived().getRoutingKey())
                 .build();
     }
 
@@ -41,10 +41,10 @@ public class AmqpConfiguration {
     }
 
     @Bean
-    public Binding bindingReceived() {
-        return bind(queueReceived())
+    public Binding bindingTaskReceived() {
+        return bind(queueTaskReceived())
                 .to(exchangeTasks())
-                .with(rabbitMqProperties.getReceived().getRoutingKey())
+                .with(rabbitMqProperties.getTaskReceived().getRoutingKey())
                 .noargs();
     }
 

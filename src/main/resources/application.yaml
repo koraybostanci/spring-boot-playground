@@ -13,7 +13,7 @@ spring:
           enabled: true
           max-attempts: 3
         prefetch: 1
-        concurrency: 10
+        concurrency: 1
   redis:
     host: localhost
     port: 6379
@@ -40,9 +40,9 @@ services:
       users: "users"
 rabbitmq:
   exchange-name: ha.tasks
-  received:
+  task-received:
     routing-key: received
     queue-name: ha.tasks.received
   dead-letter:
-    routing-key: dead-letter
-    queue-name: ha.tasks.dead-letter
+    routing-key: dlq
+    queue-name: ha.tasks.dlq

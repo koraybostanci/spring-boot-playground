@@ -26,7 +26,7 @@ public class TaskPublisher implements EventPublisher<Task> {
     public TaskPublisher(final RabbitTemplate rabbitTemplate, final RabbitMQProperties rabbitMqProperties) {
         this.rabbitTemplate = rabbitTemplate;
         this.exchangeName = rabbitMqProperties.getExchangeName();
-        this.routingKey = rabbitMqProperties.getReceived().getRoutingKey();
+        this.routingKey = rabbitMqProperties.getTaskReceived().getRoutingKey();
     }
 
     @Override
