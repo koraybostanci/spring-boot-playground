@@ -12,7 +12,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import static dev.coding.springboot.TestConstants.ANY_EXCHANGE_NAME;
 import static dev.coding.springboot.TestConstants.ANY_TASK_NAME;
 import static dev.coding.springboot.TestObjectFactory.anyTaskWithName;
-import static dev.coding.springboot.TestObjectFactory.anyTaskReceivedEntry;
+import static dev.coding.springboot.TestObjectFactory.anyTaskReceived;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -34,7 +34,7 @@ public class TaskPublisherTest {
     @BeforeEach
     public void beforeEach() {
         when(rabbitMqProperties.getExchangeName()).thenReturn(ANY_EXCHANGE_NAME);
-        when(rabbitMqProperties.getTaskReceived()).thenReturn(anyTaskReceivedEntry());
+        when(rabbitMqProperties.getTaskReceived()).thenReturn(anyTaskReceived());
 
         taskPublisher = new TaskPublisher(rabbitTemplate, rabbitMqProperties);
     }
@@ -56,7 +56,9 @@ public class TaskPublisherTest {
     public  void publish_fails_whenAmqpException() {
         final Task task = anyTaskWithName(ANY_TASK_NAME);
 
-        doThrow(AmqpException.class).when(rabbitTemplate).convertAndSend(anyString(), anyString(), any(Task.class));
+        doThrow(AmqpException.class)
+                .when(rabbitTemplate)
+                .convertAndSend(anyString(), anyString(), any(Task.class));
 
         final boolean result = taskPublisher.publish(task);
 

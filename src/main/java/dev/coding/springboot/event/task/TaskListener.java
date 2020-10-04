@@ -1,7 +1,6 @@
 package dev.coding.springboot.event.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.coding.springboot.common.exception.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -25,8 +24,12 @@ public class TaskListener  {
     @RabbitListener(queues = TASK_RECEIVED_QUEUE_NAME)
     public void onMessage(final Message message) throws IOException {
         LOGGER.debug("Message received [{}]", message);
-        final Task task = objectMapper.readValue(message.getBody(), Task.class);
-        LOGGER.info("Task received [{}]", task);
+        final Task task = toTask(message);
+        LOGGER.info("Message converted to task [{}]", task);
+    }
+
+    private Task toTask(final Message message) throws IOException {
+        return objectMapper.readValue(message.getBody(), Task.class);
     }
 
 }

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators.UUIDGenerator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
+
 @JsonIdentityInfo(
         generator = UUIDGenerator.class,
         property = "id",
@@ -12,6 +14,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class Task {
+    @NotNull
     private String name;
 
     public String getName() {
