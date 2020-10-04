@@ -1,6 +1,5 @@
 package dev.coding.springboot.configuration;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,7 +16,7 @@ import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 @ConfigurationProperties("services")
 public class ServiceEndpointProperties {
 
-    private Service github;
+    private Service github = new Service();
 
     @Getter
     @Setter
