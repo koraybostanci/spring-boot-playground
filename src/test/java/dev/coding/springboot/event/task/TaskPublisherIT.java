@@ -1,5 +1,6 @@
 package dev.coding.springboot.event.task;
 
+import dev.coding.springboot.configuration.MetricsCollector;
 import dev.coding.springboot.configuration.RabbitMQProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -29,10 +30,10 @@ import static org.springframework.amqp.core.QueueBuilder.nonDurable;
 @DirtiesContext
 @Disabled
 public class TaskPublisherIT {
-
+    @Mock
+    private MetricsCollector metricsCollector;
     @Mock
     private RabbitMQProperties rabbitMQProperties;
-
     @Mock
     private RabbitTemplate rabbitTemplate;
 
@@ -55,7 +56,7 @@ public class TaskPublisherIT {
         rabbitMQProperties.setExchangeName(ANY_EXCHANGE_NAME);
         rabbitMQProperties.setTaskReceived(anyTaskReceived());
 
-        taskPublisher = new TaskPublisher(rabbitTemplate, rabbitMQProperties);
+        taskPublisher = new TaskPublisher(rabbitTemplate, rabbitMQProperties, metricsCollector);
     }
 
     @Test
