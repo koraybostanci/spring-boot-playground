@@ -1,5 +1,6 @@
 package dev.coding.springboot.configuration;
 
+import dev.coding.springboot.configuration.amqp.RabbitMQProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

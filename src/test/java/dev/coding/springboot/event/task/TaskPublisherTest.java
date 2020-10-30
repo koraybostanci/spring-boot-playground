@@ -1,7 +1,7 @@
 package dev.coding.springboot.event.task;
 
 import dev.coding.springboot.configuration.MetricsCollector;
-import dev.coding.springboot.configuration.RabbitMQProperties;
+import dev.coding.springboot.configuration.amqp.RabbitMQProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -15,12 +15,7 @@ import static dev.coding.springboot.TestConstants.ANY_EXCHANGE_NAME;
 import static dev.coding.springboot.TestConstants.ANY_TASK_NAME;
 import static dev.coding.springboot.TestObjectFactory.anyTaskWithName;
 import static dev.coding.springboot.TestObjectFactory.anyTaskReceived;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Disabled
@@ -46,13 +41,13 @@ public class TaskPublisherTest {
     public void publish_succeeds_whenNoAmqpException() {
         final Task task = anyTaskWithName(ANY_TASK_NAME);
 
-        final boolean result = taskPublisher.publish(task);
+        taskPublisher.publish(task);
 
-        assertThat(result).isTrue();
         verify(rabbitTemplate).convertAndSend(
                 rabbitMqProperties.getExchangeName(),
                 rabbitMqProperties.getTaskReceived().getRoutingKey(),
                 task);
+        verify(metricsCollector).trackEventPublishedDuration(anyLong(), anyString());
     }
 
     @Test
@@ -63,8 +58,8 @@ public class TaskPublisherTest {
                 .when(rabbitTemplate)
                 .convertAndSend(anyString(), anyString(), any(Task.class));
 
-        final boolean result = taskPublisher.publish(task);
+        taskPublisher.publish(task);
 
-        assertThat(result).isFalse();
+        verifyNoInteractions(metricsCollector);
     }
 }

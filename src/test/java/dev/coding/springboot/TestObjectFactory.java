@@ -1,6 +1,6 @@
 package dev.coding.springboot;
 
-import dev.coding.springboot.configuration.RabbitMQProperties.TaskReceived;
+import dev.coding.springboot.configuration.amqp.RabbitMQProperties.TaskReceived;
 import dev.coding.springboot.event.task.Task;
 
 import static dev.coding.springboot.TestConstants.ANY_QUEUE_NAME;
