@@ -8,8 +8,8 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 @Component
 public class MetricsCollector {
 
-    private static final String TASK_PUBLISHED_DURATION = "app.duration.taskPublished";
-    private static final String TASK_CONSUMED_DURATION = "app.duration.taskConsumed";
+    public static final String EVENTS_PUBLISHED_DURATION = "app.events.published.duration";
+    public static final String EVENTS_PROCESSED_DURATION = "app.events.processed.duration";
 
     private final MeterRegistry meterRegistry;
 
@@ -17,11 +17,11 @@ public class MetricsCollector {
         this.meterRegistry = meterRegistry;
     }
 
-    public void trackTaskPublished(final long duration) {
-        meterRegistry.timer(TASK_PUBLISHED_DURATION).record(duration, MILLISECONDS);
+    public void trackEventPublishedDuration(final long duration, final String eventType) {
+        meterRegistry.timer(EVENTS_PUBLISHED_DURATION, "eventType", eventType).record(duration, MILLISECONDS);
     }
 
-    public void trackTaskConsumed(final long duration) {
-        meterRegistry.timer(TASK_CONSUMED_DURATION).record(duration, MILLISECONDS);
+    public void trackEventProcessedDuration(final long duration, final String eventType) {
+        meterRegistry.timer(EVENTS_PROCESSED_DURATION,"eventType", eventType).record(duration, MILLISECONDS);
     }
 }

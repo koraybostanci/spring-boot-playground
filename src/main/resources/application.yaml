@@ -1,3 +1,4 @@
+
 spring:
   application:
     name: @project.name@
@@ -6,14 +7,22 @@ spring:
     port: 5672
     username: guest
     password: guest
+    requested-heartbeat: 30
+    connection-timeout: 30000
+    publisher-returns: true
+    publisher-confirm-type: simple
+    template:
+      retry:
+        enabled: true
+        max-attempts: 2
     listener:
       simple:
         acknowledge-mode: auto
+        prefetch: 1
+        concurrency: 10
         retry:
           enabled: true
           max-attempts: 3
-        prefetch: 1
-        concurrency: 1
   redis:
     host: localhost
     port: 6379
@@ -23,7 +32,7 @@ spring:
       time-to-live: 10000 # 10 secs
 management:
   server:
-    port: 7979
+    port: 8081
   endpoints:
     web:
       base-path: /
@@ -46,3 +55,8 @@ rabbitmq:
   dead-letter:
     routing-key: dlq
     queue-name: ha.tasks.dlq
+server:
+  port: 8080
+logging:
+  level:
+    root: info

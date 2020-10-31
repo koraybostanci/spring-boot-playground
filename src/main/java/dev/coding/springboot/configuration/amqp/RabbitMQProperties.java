@@ -1,4 +1,4 @@
-package dev.coding.springboot.configuration;
+package dev.coding.springboot.configuration.amqp;
 
 import lombok.Getter;
 import lombok.Setter;

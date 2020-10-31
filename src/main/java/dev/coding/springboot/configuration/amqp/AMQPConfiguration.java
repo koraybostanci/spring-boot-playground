@@ -1,4 +1,4 @@
-package dev.coding.springboot.configuration;
+package dev.coding.springboot.configuration.amqp;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Exchange;
@@ -14,12 +14,16 @@ import static org.springframework.amqp.core.ExchangeBuilder.directExchange;
 import static org.springframework.amqp.core.QueueBuilder.durable;
 
 @Configuration
-public class AmqpConfiguration {
+public class AMQPConfiguration {
+
+    public static final String TASK_RECEIVED_QUEUE_NAME = "${rabbitmq.task-received.queue-name}";
 
     private final RabbitMQProperties rabbitMqProperties;
+    private final MessageConfirmCallback messageConfirmCallback;
 
-    public AmqpConfiguration(final RabbitMQProperties rabbitMqProperties) {
+    public AMQPConfiguration(final RabbitMQProperties rabbitMqProperties, final MessageConfirmCallback messageConfirmCallback) {
         this.rabbitMqProperties = rabbitMqProperties;
+        this.messageConfirmCallback = messageConfirmCallback;
     }
 
     @Bean
@@ -60,6 +64,7 @@ public class AmqpConfiguration {
     public RabbitTemplate rabbitTemplate(final CachingConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        rabbitTemplate.setConfirmCallback(messageConfirmCallback);
         return rabbitTemplate;
     }
 
