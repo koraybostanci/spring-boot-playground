@@ -1,4 +1,3 @@
-
 spring:
   application:
     name: @project.name@
@@ -57,6 +56,7 @@ rabbitmq:
     queue-name: ha.tasks.dlq
 server:
   port: 8080
+  shutdown: graceful
 logging:
   level:
     root: info
