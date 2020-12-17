@@ -4,7 +4,7 @@ A starter project for Spring Boot applications.
 
 **Based on**
 - Java 11
-- Spring Boot 2.4.0
+- Spring Boot 2.4.1
 - RabbitMQ 3.8.7
 
 **How to**
