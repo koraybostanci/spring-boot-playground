@@ -1,17 +1,53 @@
-# springboot-starter
+# springboot-boilerplate
 
-A starter project for Spring Boot applications.
+A boilerplate project for Spring Boot application, based on;
 
-**Based on**
 - Java 11
 - Spring Boot 2.4.1
-- RabbitMQ 3.8.7
+- RabbitMQ 3.8.11
+- Redis 6
 
-**How to**
+## Building the application
 
-|Action|Command|
-|---|---|
-|Build | mvn clean install -Dmaven.test.skip=true |
-|Run | mvn spring-boot:run |
-|Build a Docker image | docker build . -t springboot-starter:0.0.1 |
-|Run as Docker container | docker run -d -it --name springboot-starter -p 8080:8080 -p 8081:8081 springboot-starter:0.0.1 |
+### By Maven
+```shell
+mvn clean install -Dmaven.test.skip=true
+```
+
+### By Docker
+```docker
+docker build . -t springboot-boilerplate:0.0.1
+```
+
+## Running the application
+
+### How to run dependencies
+
+The easiest way to run dependencies on the local environment is to run them via Docker.
+
+**RabbitMQ**
+```docker
+docker run -d -it --name local-rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+```
+
+**Redis**
+````docker
+docker run -d -it --name local-redis -p 6379:6379 redis:6
+````
+
+**HttpBin**
+````docker
+docker run -d -it --name local-httpbin -p 8001:80 kennethreitz/httpbin
+````
+
+### How to run the application
+
+### By Maven
+```shell
+mvn spring-boot:run
+```
+
+### By Docker
+```docker
+docker run -d -it --name local-springboot-boilerplate -p 7979:7979 -p 8080:8080 springboot-boilerplate:0.0.1
+```
