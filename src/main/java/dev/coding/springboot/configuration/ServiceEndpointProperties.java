@@ -5,35 +5,26 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
-import java.net.URI;
+import javax.validation.constraints.NotBlank;
 import java.util.Map;
-
-import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
 @Getter
 @Setter
 @Validated
-@ConfigurationProperties("services")
+@ConfigurationProperties("service-endpoints")
 public class ServiceEndpointProperties {
 
-    private Service github = new Service();
+    private ServiceEndpoint httpBin = new ServiceEndpoint();
 
     @Getter
     @Setter
     @Validated
-    public static class Service {
+    public static class ServiceEndpoint {
+        @NotBlank
         private String baseUrl;
         private Map<String, String> paths;
 
-        public URI getBaseUri() {
-            return fromPath(baseUrl).build().toUri();
-        }
-
-        public URI getPathUri(final String pathKey) {
-            return fromPath(baseUrl).path(getPath(pathKey)).build().toUri();
-        }
-
-        private String getPath(final String key) {
+        public String getPath(final String key) {
             return paths.get(key);
         }
     }

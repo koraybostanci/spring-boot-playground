@@ -2,8 +2,8 @@ spring:
   application:
     name: @project.name@
   rabbitmq:
-    host: localhost
-    port: 5672
+    host: ${SPRING_RABBITMQ_HOST:@rabbitmq.host@}
+    port: ${SPRING_RABBITMQ_PORT:@rabbitmq.port@}
     username: guest
     password: guest
     requested-heartbeat: 30
@@ -13,7 +13,7 @@ spring:
     template:
       retry:
         enabled: true
-        max-attempts: 2
+        max-attempts: 3
     listener:
       simple:
         acknowledge-mode: auto
@@ -23,15 +23,15 @@ spring:
           enabled: true
           max-attempts: 3
   redis:
-    host: localhost
-    port: 6379
+    host: ${SPRING_REDIS_HOST:@redis.host@}
+    port: ${SPRING_REDIS_PORT:@redis.port@}
   cache:
     type: redis
     redis:
       time-to-live: 10000 # 10 secs
 management:
   server:
-    port: 8081
+    port: 7979
   endpoints:
     web:
       base-path: /
@@ -41,22 +41,34 @@ management:
           - info
           - metrics
           - prometheus
-services:
-  github:
-    base-url: "https://api.github.com/"
-    paths:
-      users: "users"
-rabbitmq:
-  exchange-name: ha.tasks
-  task-received:
-    routing-key: received
-    queue-name: ha.tasks.received
+
+queues:
+  exchange-name: ha.app
+  inbox:
+    routing-key: inbox
+    queue-name: ha.app.inbox
   dead-letter:
-    routing-key: dlq
-    queue-name: ha.tasks.dlq
+    routing-key: dead-letter
+    queue-name: ha.app.dead-letter
+
+service-endpoints:
+  http-bin:
+    base-url: "http://localhost:8001/"
+    paths:
+      get-slide-show-data: "json"
+
+oauth2:
+  tokens:
+    token-info-uri: ""
+    access-token-uri: ""
+  scopes:
+    read: ""
+    write: ""
+
 server:
   port: 8080
   shutdown: graceful
+
 logging:
   level:
     root: info
