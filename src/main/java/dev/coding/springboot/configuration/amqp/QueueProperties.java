@@ -6,32 +6,32 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
-@Validated
-@ConfigurationProperties("rabbitmq")
 @Getter
 @Setter
-public class RabbitMQProperties {
+@Validated
+@ConfigurationProperties("queues")
+public class QueueProperties {
 
-    @NotNull
+    @NotBlank
     private String exchangeName;
     @Valid
-    private TaskReceived taskReceived = new TaskReceived();
+    private Inbox inbox = new Inbox();
     @Valid
     private DeadLetter deadLetter = new DeadLetter();
 
-    public static class TaskReceived extends Entry { }
-
-    public static class DeadLetter extends Entry { }
+    public static class Inbox extends Queue { }
+    public static class DeadLetter extends Queue { }
 
     @Validated
     @Getter
     @Setter
-    public static class Entry {
-        @NotNull
+    public static class Queue {
+        @NotBlank
         private String queueName;
-        @NotNull
+        @NotBlank
         private String routingKey;
     }
 }
+
