@@ -1,41 +1,35 @@
-package dev.coding.springboot.event.task;
+package dev.coding.springboot.queue.inbox;
 
-import dev.coding.springboot.configuration.MetricsCollector;
-import dev.coding.springboot.configuration.amqp.RabbitMQProperties;
+import dev.coding.springboot.configuration.amqp.QueueProperties;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static dev.coding.springboot.TestConstants.ANY_EXCHANGE_NAME;
-import static dev.coding.springboot.TestConstants.ANY_QUEUE_NAME;
-import static dev.coding.springboot.TestConstants.ANY_ROUTING_KEY;
-import static dev.coding.springboot.TestConstants.ANY_TASK_NAME;
+import static dev.coding.springboot.TestConstants.*;
 import static dev.coding.springboot.TestObjectFactory.anyTaskWithName;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.amqp.core.BindingBuilder.bind;
 import static org.springframework.amqp.core.ExchangeBuilder.directExchange;
 import static org.springframework.amqp.core.QueueBuilder.nonDurable;
 
+@ActiveProfiles(PROFILE_INTEGRATION_TEST)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@DirtiesContext
-@Disabled
 public class TaskPublisherIT {
-    @MockBean
-    private MetricsCollector metricsCollector;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
-    private RabbitMQProperties rabbitMQProperties;
+    private QueueProperties queueProperties;
     @Autowired
     private AmqpAdmin amqpAdmin;
 
@@ -53,7 +47,7 @@ public class TaskPublisherIT {
 
         amqpAdmin.purgeQueue(ANY_QUEUE_NAME, false);
 
-        taskPublisher = new TaskPublisher(rabbitTemplate, rabbitMQProperties, metricsCollector);
+        taskPublisher = new TaskPublisher(rabbitTemplate, queueProperties);
     }
 
     @Test
@@ -62,7 +56,7 @@ public class TaskPublisherIT {
 
         taskPublisher.publish(task);
 
-        assertThat(getMessageCountInQueue(rabbitMQProperties.getTaskReceived().getQueueName())).isOne();
+        assertThat(getMessageCountInQueue(queueProperties.getInbox().getQueueName())).isOne();
     }
 
     @Test
@@ -70,7 +64,7 @@ public class TaskPublisherIT {
         final Task task = anyTaskWithName(null);
 
         taskPublisher.publish(task);
-        assertThat(getMessageCountInQueue(rabbitMQProperties.getTaskReceived().getQueueName())).isZero();
+        assertThat(getMessageCountInQueue(queueProperties.getInbox().getQueueName())).isZero();
     }
 
     private int getMessageCountInQueue(final String queueName) {
