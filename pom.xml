@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.1</version>
+        <version>2.4.2</version>
         <relativePath/>
     </parent>
 
@@ -23,12 +23,12 @@
         <java.version>11</java.version>
 
         <!-- Dependencies -->
-        <modelmapper.version>2.3.0</modelmapper.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-lang3.version>3.10</commons-lang3.version>
+        <modelmapper.version>2.3.0</modelmapper.version>
+        <resilience4j.version>1.5.0</resilience4j.version>
         <testcontainers.version>1.15.1</testcontainers.version>
         <wiremock.version>2.27.2</wiremock.version>
-        <resilience4j.version>1.5.0</resilience4j.version>
 
         <!-- Plugins -->
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
@@ -87,12 +87,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- External -->
