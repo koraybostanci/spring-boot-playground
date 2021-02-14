@@ -1,7 +1,7 @@
 package dev.coding.springboot.configuration.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -9,13 +9,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@EnableCaching
 public class RedisConfiguration {
 
-    public static final String REDIS_TEMPLATE_AS_OBJECT_VALUE = "redisTemplateAsObjectValue";
+    public static final String REDIS_TEMPLATE_WITH_JSON_VALUE = "redisTemplateWithJsonValue";
 
-    @Bean
-    @Qualifier(REDIS_TEMPLATE_AS_OBJECT_VALUE)
-    public RedisTemplate<String, Object> redisTemplateAsString(final ObjectMapper objectMapper, final RedisConnectionFactory redisConnectionFactory) {
+    @Bean(REDIS_TEMPLATE_WITH_JSON_VALUE)
+    public RedisTemplate<String, Object> redisTemplateWithJsonValue(final ObjectMapper objectMapper, final RedisConnectionFactory redisConnectionFactory) {
         final RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
