@@ -1,4 +1,4 @@
-package dev.coding.springboot;
+package dev.coding.springboot.common;
 
 public class TestConstants {
     public static final String PROFILE_INTEGRATION_TEST = "integration-test";
