@@ -1,6 +1,7 @@
 package dev.coding.springboot.queue.inbox;
 
-import dev.coding.springboot.configuration.amqp.QueueProperties;
+import dev.coding.springboot.common.AbstractIntegrationTest;
+import dev.coding.springboot.configuration.rabbitmq.RabbitMQProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static dev.coding.springboot.TestConstants.*;
-import static dev.coding.springboot.TestObjectFactory.anyTaskWithName;
+import static dev.coding.springboot.common.TestConstants.*;
+import static dev.coding.springboot.common.TestObjectFactory.anyTaskWithName;
+import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.amqp.core.BindingBuilder.bind;
 import static org.springframework.amqp.core.ExchangeBuilder.directExchange;
@@ -24,12 +26,12 @@ import static org.springframework.amqp.core.QueueBuilder.nonDurable;
 @ActiveProfiles(PROFILE_INTEGRATION_TEST)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class TaskPublisherIT {
+public class TaskPublisherIT extends AbstractIntegrationTest {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
-    private QueueProperties queueProperties;
+    private RabbitMQProperties rabbitMQProperties;
     @Autowired
     private AmqpAdmin amqpAdmin;
 
@@ -47,24 +49,22 @@ public class TaskPublisherIT {
 
         amqpAdmin.purgeQueue(ANY_QUEUE_NAME, false);
 
-        taskPublisher = new TaskPublisher(rabbitTemplate, queueProperties);
+        rabbitMQProperties.setExchangeName(ANY_EXCHANGE_NAME);
+        rabbitMQProperties.getInbox().setQueueName(ANY_QUEUE_NAME);
+        rabbitMQProperties.getInbox().setRoutingKey(ANY_ROUTING_KEY);
+
+        taskPublisher = new TaskPublisher(rabbitTemplate, rabbitMQProperties);
     }
 
     @Test
-    public void publish_successfullyPublishesTaskToExchange_whenGivenTaskIsValid() {
+    public void publish_successfullyPublishesTask_whenGivenTaskIsValid() throws InterruptedException {
         final Task task = anyTaskWithName(ANY_TASK_NAME);
 
         taskPublisher.publish(task);
 
-        assertThat(getMessageCountInQueue(queueProperties.getInbox().getQueueName())).isOne();
-    }
+        sleep(1000);
 
-    @Test
-    public void publish_doesNotPublishTaskToExchange_whenGivenTaskIsInvalid() {
-        final Task task = anyTaskWithName(null);
-
-        taskPublisher.publish(task);
-        assertThat(getMessageCountInQueue(queueProperties.getInbox().getQueueName())).isZero();
+        assertThat(getMessageCountInQueue(ANY_QUEUE_NAME)).isOne();
     }
 
     private int getMessageCountInQueue(final String queueName) {

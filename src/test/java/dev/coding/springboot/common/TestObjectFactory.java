@@ -1,10 +1,10 @@
-package dev.coding.springboot;
+package dev.coding.springboot.common;
 
-import dev.coding.springboot.configuration.amqp.QueueProperties.Inbox;
+import dev.coding.springboot.configuration.rabbitmq.RabbitMQProperties.Inbox;
 import dev.coding.springboot.queue.inbox.Task;
 
-import static dev.coding.springboot.TestConstants.ANY_QUEUE_NAME;
-import static dev.coding.springboot.TestConstants.ANY_ROUTING_KEY;
+import static dev.coding.springboot.common.TestConstants.ANY_QUEUE_NAME;
+import static dev.coding.springboot.common.TestConstants.ANY_ROUTING_KEY;
 
 public class TestObjectFactory {
 
