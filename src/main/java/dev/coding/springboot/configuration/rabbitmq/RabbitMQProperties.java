@@ -1,4 +1,4 @@
-package dev.coding.springboot.configuration.amqp;
+package dev.coding.springboot.configuration.rabbitmq;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,8 +11,8 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @Validated
-@ConfigurationProperties("queues")
-public class QueueProperties {
+@ConfigurationProperties("rabbitmq")
+public class RabbitMQProperties {
 
     @NotBlank
     private String exchangeName;
