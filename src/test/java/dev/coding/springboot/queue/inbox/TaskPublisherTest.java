@@ -1,6 +1,6 @@
 package dev.coding.springboot.queue.inbox;
 
-import dev.coding.springboot.configuration.amqp.QueueProperties;
+import dev.coding.springboot.configuration.rabbitmq.RabbitMQProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -10,10 +10,14 @@ import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static dev.coding.springboot.TestConstants.ANY_EXCHANGE_NAME;
-import static dev.coding.springboot.TestConstants.ANY_TASK_NAME;
-import static dev.coding.springboot.TestObjectFactory.*;
-import static org.mockito.Mockito.*;
+import static dev.coding.springboot.common.TestConstants.ANY_EXCHANGE_NAME;
+import static dev.coding.springboot.common.TestConstants.ANY_TASK_NAME;
+import static dev.coding.springboot.common.TestObjectFactory.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @Disabled
@@ -22,16 +26,16 @@ public class TaskPublisherTest {
     @Mock
     private RabbitTemplate rabbitTemplate;
     @Mock
-    private QueueProperties queueProperties;
+    private RabbitMQProperties rabbitMQProperties;
 
     private TaskPublisher taskPublisher;
 
     @BeforeEach
     public void beforeEach() {
-        when(queueProperties.getExchangeName()).thenReturn(ANY_EXCHANGE_NAME);
-        when(queueProperties.getInbox()).thenReturn(anyInboxQueue());
+        when(rabbitMQProperties.getExchangeName()).thenReturn(ANY_EXCHANGE_NAME);
+        when(rabbitMQProperties.getInbox()).thenReturn(anyInboxQueue());
 
-        taskPublisher = new TaskPublisher(rabbitTemplate, queueProperties);
+        taskPublisher = new TaskPublisher(rabbitTemplate, rabbitMQProperties);
     }
 
     @Test
@@ -41,8 +45,8 @@ public class TaskPublisherTest {
         taskPublisher.publish(task);
 
         verify(rabbitTemplate).convertAndSend(
-                queueProperties.getExchangeName(),
-                queueProperties.getInbox().getRoutingKey(),
+                rabbitMQProperties.getExchangeName(),
+                rabbitMQProperties.getInbox().getRoutingKey(),
                 task);
     }
 

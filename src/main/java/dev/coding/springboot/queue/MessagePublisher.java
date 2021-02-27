@@ -9,9 +9,9 @@ import static java.lang.String.format;
 @Slf4j
 public abstract class MessagePublisher<T> {
 
-    private static final String PUBLISHING_MESSAGE = "Publishing message [{}] to RabbitMQ";
-    private static final String SUCCESSFULLY_PUBLISHED_MESSAGE = "Successfully published message [{}] to RabbitMQ";
-    private static final String FAILED_WHILE_PUBLISHING_MESSAGE = "Failed while publishing message [%s] to RabbitMQ due to [%s]";
+    private static final String PUBLISHING_MESSAGE = "Publishing message [{}] to [{}]";
+    private static final String SUCCESSFULLY_PUBLISHED_MESSAGE = "Successfully published message [{}] to [{}]";
+    private static final String FAILED_WHILE_PUBLISHING_MESSAGE = "Failed while publishing message [%s] to [%s] due to [%s]";
 
     private final RabbitTemplate rabbitTemplate;
     private final String exchangeName;
@@ -27,11 +27,11 @@ public abstract class MessagePublisher<T> {
 
     protected boolean doPublish(final T message) {
         try {
-            log.debug(PUBLISHING_MESSAGE, message);
+            log.debug(PUBLISHING_MESSAGE, message, exchangeName);
             rabbitTemplate.convertAndSend(exchangeName, routingKey, message);
-            log.info(SUCCESSFULLY_PUBLISHED_MESSAGE, message);
+            log.info(SUCCESSFULLY_PUBLISHED_MESSAGE, message, exchangeName);
         } catch (final AmqpException ex) {
-            log.error(format(FAILED_WHILE_PUBLISHING_MESSAGE, message, ex));
+            log.error(format(FAILED_WHILE_PUBLISHING_MESSAGE, message, exchangeName, ex));
             return false;
         }
         return true;

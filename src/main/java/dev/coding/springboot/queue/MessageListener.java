@@ -1,6 +1,7 @@
 package dev.coding.springboot.queue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 
@@ -17,9 +18,10 @@ public abstract class MessageListener<T> {
         this.objectMapper = objectMapper;
     }
 
-    protected T fromMessage(final Message message) throws IOException {
-        final T obj = objectMapper.readValue(message.getBody(), type);
-        log.debug("Message converted to [{}]", obj);
-        return obj;
+    @Timed
+    protected abstract void onMessage(final Message message) throws IOException;
+
+    protected T toObject(final Message message) throws IOException {
+        return objectMapper.readValue(message.getBody(), type);
     }
 }

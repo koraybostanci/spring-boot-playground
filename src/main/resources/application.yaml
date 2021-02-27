@@ -1,6 +1,8 @@
 spring:
   application:
     name: @project.name@
+  jmx:
+    enabled: false
   rabbitmq:
     host: ${SPRING_RABBITMQ_HOST:@rabbitmq.host@}
     port: ${SPRING_RABBITMQ_PORT:@rabbitmq.port@}
@@ -42,7 +44,7 @@ management:
           - metrics
           - prometheus
 
-queues:
+rabbitmq:
   exchange-name: ha.app
   inbox:
     routing-key: inbox

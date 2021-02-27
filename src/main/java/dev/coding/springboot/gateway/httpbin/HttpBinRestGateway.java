@@ -6,7 +6,6 @@ import dev.coding.springboot.gateway.httpbin.data.SlideShowData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;

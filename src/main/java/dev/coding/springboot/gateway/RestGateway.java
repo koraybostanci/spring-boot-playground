@@ -1,6 +1,5 @@
 package dev.coding.springboot.gateway;
 
-import dev.coding.springboot.common.exception.rest.RestCallFailedException;
 import dev.coding.springboot.configuration.ServiceEndpointProperties.ServiceEndpoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
