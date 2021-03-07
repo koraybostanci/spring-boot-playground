@@ -1,7 +1,6 @@
 package dev.coding.springboot.common;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -13,12 +12,10 @@ import org.testcontainers.utility.DockerImageName;
 
 import static dev.coding.springboot.common.TestConstants.PROFILE_INTEGRATION_TEST;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.testcontainers.containers.wait.strategy.Wait.forListeningPort;
 
 @ActiveProfiles(PROFILE_INTEGRATION_TEST)
 @Testcontainers
-@SpringBootTest(webEnvironment = RANDOM_PORT)
 public abstract class AbstractIntegrationTest {
 
     private static final String POSTGRES_DOCKER_IMAGE_NAME = "postgres:13";

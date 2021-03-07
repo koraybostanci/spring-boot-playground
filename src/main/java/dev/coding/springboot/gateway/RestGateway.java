@@ -13,7 +13,6 @@ import java.net.URI;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -41,23 +40,28 @@ public abstract class RestGateway {
     public <T> Optional<T> httpGet(final URI uri, final Class<T> returnType) {
         final RequestEntity requestEntity = requestEntityOf(GET, uri);
 
+        ResponseEntity<T> responseEntity;
         try {
-            log.info(REST_CALL_TO_URI, uri, requestEntity);
-            final ResponseEntity<T> responseEntity = restTemplate.exchange(requestEntity, returnType);
+            log.debug(REST_CALL_TO_URI, uri, requestEntity);
+            responseEntity = restTemplate.exchange(requestEntity, returnType);
             log.info(REST_CALL_TO_URI_RESPONDED, uri, responseEntity);
-
-            return isSuccessfulResponse(responseEntity) ? ofNullable(responseEntity.getBody()) : empty();
         } catch (final RestClientException ex) {
-            logAndRethrowException(uri, ex);
+            throw new RestCallFailedException(format(REST_CALL_TO_URI_FAILED, uri, ex), ex);
         }
 
-        return empty();
+        return processResponseEntity(uri, responseEntity);
     }
 
-    private void logAndRethrowException(final URI uri, final Exception ex) {
-        final String message = format(REST_CALL_TO_URI_FAILED, uri, ex);
-        log.error(message);
-        throw new RestCallFailedException(message, ex);
+    private <T> Optional<T> processResponseEntity(final URI uri, final ResponseEntity<T> responseEntity) {
+        if (responseEntity == null) {
+            throw new RestCallFailedException(format(REST_CALL_TO_URI_FAILED, uri, "Null responseEntity"));
+        }
+
+        if (!isSuccessfulResponse(responseEntity)) {
+            throw new RestCallFailedException(format(REST_CALL_TO_URI_FAILED, uri, format("Unsuccessful responseCode: %s", responseEntity.getStatusCode())));
+        }
+
+        return ofNullable(responseEntity.getBody());
     }
 
     private RequestEntity requestEntityOf(final HttpMethod httpMethod, final URI uri) {
@@ -71,6 +75,6 @@ public abstract class RestGateway {
     }
 
     private boolean isSuccessfulResponse(final ResponseEntity responseEntity) {
-        return responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful();
+        return responseEntity.getStatusCode().is2xxSuccessful();
     }
 }
