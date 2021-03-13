@@ -20,14 +20,7 @@
     </organization>
 
     <properties>
-        <!-- Project -->
         <java.version>11</java.version>
-
-        <!-- Properties -->
-        <rabbitmq.host>localhost</rabbitmq.host>
-        <rabbitmq.port>5672</rabbitmq.port>
-        <redis.host>localhost</redis.host>
-        <redis.port>6379</redis.port>
 
         <!-- Dependency Versions -->
         <commons-collections4.version>4.4</commons-collections4.version>
@@ -39,6 +32,12 @@
 
         <!-- Plugin Versions -->
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
+
+        <!-- Properties -->
+        <rabbitmq.host>localhost</rabbitmq.host>
+        <rabbitmq.port>5672</rabbitmq.port>
+        <redis.host>localhost</redis.host>
+        <redis.port>6379</redis.port>
     </properties>
 
     <dependencies>
@@ -61,12 +60,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
@@ -86,6 +79,10 @@
         </dependency>
 
         <!-- External -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>

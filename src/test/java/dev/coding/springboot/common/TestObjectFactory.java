@@ -1,5 +1,6 @@
 package dev.coding.springboot.common;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.coding.springboot.configuration.rabbitmq.RabbitMQProperties.Inbox;
 import dev.coding.springboot.gateway.httpbin.data.Slide;
 import dev.coding.springboot.gateway.httpbin.data.SlideShow;
@@ -12,6 +13,11 @@ import static dev.coding.springboot.common.TestConstants.ANY_QUEUE_NAME;
 import static dev.coding.springboot.common.TestConstants.ANY_ROUTING_KEY;
 
 public class TestObjectFactory {
+
+    public static ObjectMapper configureTestObjectMapper() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper;
+    }
 
     public static Inbox anyInboxQueue() {
         final Inbox inbox = new Inbox();
