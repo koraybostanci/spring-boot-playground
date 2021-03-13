@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.2</version>
+        <version>2.4.3</version>
         <relativePath/>
     </parent>
 
@@ -22,7 +22,7 @@
     <properties>
         <java.version>11</java.version>
 
-        <!-- Dependencies -->
+        <!-- Dependency Versions -->
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-lang3.version>3.10</commons-lang3.version>
         <modelmapper.version>2.3.0</modelmapper.version>
@@ -30,14 +30,14 @@
         <testcontainers.version>1.15.2</testcontainers.version>
         <wiremock.version>2.27.2</wiremock.version>
 
-        <!-- Plugins -->
+        <!-- Plugin Versions -->
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
 
         <!-- Properties -->
-        <redis.host>localhost</redis.host>
-        <redis.port>6379</redis.port>
         <rabbitmq.host>localhost</rabbitmq.host>
         <rabbitmq.port>5672</rabbitmq.port>
+        <redis.host>localhost</redis.host>
+        <redis.port>6379</redis.port>
     </properties>
 
     <dependencies>
@@ -60,12 +60,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
@@ -83,13 +77,12 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <!-- External -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -123,6 +116,13 @@
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-micrometer</artifactId>
             <version>${resilience4j.version}</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
@@ -175,10 +175,6 @@
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
                             <reportsDirectory>${project.build.directory}/reports/failsafe</reportsDirectory>
-                            <includes>
-                                <include>**/*IT.java</include>
-                                <include>**/*IntegrationTest.java</include>
-                            </includes>
                         </configuration>
                         <executions>
                             <execution>
