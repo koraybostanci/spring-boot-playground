@@ -1,10 +1,10 @@
-# springboot-boilerplate
+## Description
 
-A boilerplate project for Spring Boot application, based on;
+A playground project for Spring Boot application, based on;
 
 - Java 11
-- Spring Boot 2.4.1
-- RabbitMQ 3.8.11
+- Spring Boot 2.4.x
+- RabbitMQ 3.8.x
 - Redis 6
 
 ## Building the application
@@ -16,7 +16,7 @@ mvn clean install -Dmaven.test.skip=true
 
 ### By Docker
 ```docker
-docker build . -t springboot-boilerplate:0.0.1
+docker build . -t springboot-playground:0.0.1
 ```
 
 ## Running the application
@@ -49,5 +49,5 @@ mvn spring-boot:run
 
 ### By Docker
 ```docker
-docker run -d -it --name local-springboot-boilerplate -p 7979:7979 -p 8080:8080 springboot-boilerplate:0.0.1
+docker run -d -it --name local-springboot-playground -p 7979:7979 -p 8080:8080 springboot-playground:0.0.1
 ```

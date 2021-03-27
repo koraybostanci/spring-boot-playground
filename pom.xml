@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>dev.coding</groupId>
-    <artifactId>springboot-boilerplate</artifactId>
+    <artifactId>springboot-playground</artifactId>
     <version>0.0.1</version>
-    <name>springboot-boilerplate</name>
+    <name>springboot-playground</name>
 
     <organization>
         <name>dev.coding</name>
