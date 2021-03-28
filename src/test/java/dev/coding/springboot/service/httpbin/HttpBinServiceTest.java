@@ -1,9 +1,7 @@
-package dev.coding.springboot.service;
+package dev.coding.springboot.service.httpbin;
 
 import dev.coding.springboot.gateway.httpbin.HttpBinRestGateway;
 import dev.coding.springboot.gateway.httpbin.data.SlideShowData;
-import dev.coding.springboot.service.httpbin.HttpBinService;
-import dev.coding.springboot.service.httpbin.HttpBinServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 import static dev.coding.springboot.common.TestObjectFactory.anySlideShowData;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,9 +31,9 @@ public class HttpBinServiceTest {
     }
 
     @Test
-    public void getSlideShowData_returnsSlideShowData_whenHttpBinEndpointSucceeds() {
+    public void getSlideShowData_returnsSlideShowData_whenGatewayReturnsData() {
         final SlideShowData slideShowData = anySlideShowData();
-        when(httpBinRestGateway.getSlideShowData()).thenReturn(Optional.of(slideShowData));
+        when(httpBinRestGateway.getSlideShowData()).thenReturn(of(slideShowData));
 
         final Optional<SlideShowData> retrievedSlideShowData = httpBinService.getSlideShowData();
 
@@ -40,8 +41,8 @@ public class HttpBinServiceTest {
     }
 
     @Test
-    public void getSlideShowData_doesNotReturnSlideShowData_whenHttpBinEndpointReturnsEmpty() {
-        when(httpBinRestGateway.getSlideShowData()).thenReturn(Optional.empty());
+    public void getSlideShowData_doesNotReturnSlideShowData_whenGatewayReturnsEmpty() {
+        when(httpBinRestGateway.getSlideShowData()).thenReturn(empty());
 
         final Optional<SlideShowData> retrievedSlideShowData = httpBinService.getSlideShowData();
 

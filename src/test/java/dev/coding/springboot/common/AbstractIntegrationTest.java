@@ -1,6 +1,9 @@
 package dev.coding.springboot.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -23,8 +26,18 @@ public class AbstractIntegrationTest {
 
     private static final int RABBITMQ_PORT = 5672;
     private static final int REDIS_PORT = 6379;
+    private static final int WIREMOCK_PORT = 8001;
 
-    private final ObjectMapper objectMapper = configureTestObjectMapper();
+    private final static ObjectMapper objectMapper = configureTestObjectMapper();
+    private final static WireMockServer wireMockServer = new WireMockServer(WIREMOCK_PORT);
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
+
+    public static WireMockServer getWireMockServer() {
+        return wireMockServer;
+    }
 
     @Container
     public static PostgreSQLContainer postgresContainer = new PostgreSQLContainer(DockerImageName.parse(POSTGRES_DOCKER_IMAGE_NAME));
@@ -52,15 +65,26 @@ public class AbstractIntegrationTest {
         registry.add("spring.redis.port", () -> redisContainer.getMappedPort(REDIS_PORT));
     }
 
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
+    @BeforeAll
+    public static void onBeforeAll() {
+        wireMockServer.start();
+    }
+
+    @AfterAll
+    public static void onAfterAll() {
+        wireMockServer.stop();
     }
 
     @Test
-    public void containersAreRunning() {
+    public void areContainersRunning() {
         assertTrue(postgresContainer.isRunning());
         assertTrue(redisContainer.isRunning());
         assertTrue(rabbitMQContainer.isRunning());
+    }
+
+    @Test
+    public void isWireMockServerRunning() {
+        assertTrue(wireMockServer.isRunning());
     }
 
 }
