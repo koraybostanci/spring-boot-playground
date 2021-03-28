@@ -24,10 +24,6 @@ public class HttpBinController {
     @GetMapping(value = "/slides", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<SlideShowData> getSlideShowData() {
         final Optional<SlideShowData> data = httpBinService.getSlideShowData();
-        if (data.isPresent()) {
-            return ok(data.get());
-        } else {
-            return notFound().build();
-        }
+        return data.isPresent() ? ok(data.get()) : notFound().build();
     }
 }

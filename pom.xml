@@ -6,14 +6,15 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.3</version>
+        <version>2.4.4</version>
         <relativePath/>
     </parent>
 
     <groupId>dev.coding</groupId>
-    <artifactId>springboot-boilerplate</artifactId>
+    <artifactId>springboot-playground</artifactId>
     <version>0.0.1</version>
-    <name>springboot-boilerplate</name>
+    <name>springboot-playground</name>
+    <description>A springboot playground project</description>
 
     <organization>
         <name>dev.coding</name>
@@ -24,9 +25,9 @@
 
         <!-- Dependency Versions -->
         <commons-collections4.version>4.4</commons-collections4.version>
-        <commons-lang3.version>3.10</commons-lang3.version>
-        <modelmapper.version>2.3.0</modelmapper.version>
-        <resilience4j.version>1.5.0</resilience4j.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <modelmapper.version>2.3.9</modelmapper.version>
+        <resilience4j.version>1.7.0</resilience4j.version>
         <testcontainers.version>1.15.2</testcontainers.version>
         <wiremock.version>2.27.2</wiremock.version>
 
@@ -191,7 +192,7 @@
     </profiles>
 
     <build>
-        <finalName>springboot-boilderplate</finalName>
+        <finalName>springboot-playground</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -4,7 +4,6 @@ import dev.coding.springboot.configuration.ServiceEndpointProperties;
 import dev.coding.springboot.gateway.RestGateway;
 import dev.coding.springboot.gateway.httpbin.data.SlideShowData;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,13 +17,11 @@ import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 public class HttpBinRestGateway extends RestGateway {
 
     private static final String GET_SLIDE_SHOW_DATA_KEY = "get-slide-show-data";
-    private static final String SLIDE_SHOW_CACHE_NAME = "slide-show-data";
 
     public HttpBinRestGateway(final RestTemplate restTemplate, final ServiceEndpointProperties serviceEndpointProperties) {
         super(restTemplate, serviceEndpointProperties.getHttpBin());
     }
 
-    @Cacheable(cacheNames = SLIDE_SHOW_CACHE_NAME)
     public Optional<SlideShowData> getSlideShowData() {
         final URI uri = fromHttpUrl(getServiceEndpoint().getBaseUrl())
                 .path(getServiceEndpoint().getPath(GET_SLIDE_SHOW_DATA_KEY))
