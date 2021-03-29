@@ -1,7 +1,7 @@
 package dev.coding.springboot.rest.controller;
 
 import dev.coding.springboot.queue.inbox.Task;
-import dev.coding.springboot.service.TaskService;
+import dev.coding.springboot.service.task.TaskService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,12 +1,23 @@
 package dev.coding.springboot.common;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.coding.springboot.configuration.rabbitmq.RabbitMQProperties.Inbox;
+import dev.coding.springboot.gateway.httpbin.data.Slide;
+import dev.coding.springboot.gateway.httpbin.data.SlideShow;
+import dev.coding.springboot.gateway.httpbin.data.SlideShowData;
 import dev.coding.springboot.queue.inbox.Task;
+
+import java.util.List;
 
 import static dev.coding.springboot.common.TestConstants.ANY_QUEUE_NAME;
 import static dev.coding.springboot.common.TestConstants.ANY_ROUTING_KEY;
 
 public class TestObjectFactory {
+
+    public static ObjectMapper configureTestObjectMapper() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper;
+    }
 
     public static Inbox anyInboxQueue() {
         final Inbox inbox = new Inbox();
@@ -19,5 +30,27 @@ public class TestObjectFactory {
         final Task task = new Task();
         task.setName(name);
         return task;
+    }
+
+    public static SlideShowData anySlideShowData() {
+        final SlideShowData slideShowData = new SlideShowData();
+        slideShowData.setSlideshow(anySlideShow());
+        return slideShowData;
+    }
+
+    public static SlideShow anySlideShow() {
+        final SlideShow slideShow = new SlideShow();
+        slideShow.setAuthor("anyAuthor");
+        slideShow.setTitle("anyTitle");
+        slideShow.setSlides(List.of(anySlide()));
+        return slideShow;
+    }
+
+    public static Slide anySlide() {
+        final Slide slide = new Slide();
+        slide.setTitle("anyTitle");
+        slide.setType("anyType");
+        slide.setItems(List.of("item1", "item2"));
+        return slide;
     }
 }

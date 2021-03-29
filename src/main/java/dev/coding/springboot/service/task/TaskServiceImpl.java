@@ -1,15 +1,15 @@
-package dev.coding.springboot.service;
+package dev.coding.springboot.service.task;
 
 import dev.coding.springboot.queue.inbox.Task;
 import dev.coding.springboot.queue.inbox.TaskPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TaskService {
+public class TaskServiceImpl implements TaskService {
 
     private final TaskPublisher taskPublisher;
 
-    public TaskService(final TaskPublisher taskPublisher) {
+    public TaskServiceImpl(final TaskPublisher taskPublisher) {
         this.taskPublisher = taskPublisher;
     }
 

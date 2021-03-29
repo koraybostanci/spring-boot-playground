@@ -55,9 +55,9 @@ rabbitmq:
 
 service-endpoints:
   http-bin:
-    base-url: "http://localhost:8001/"
+    base-url: "http://localhost:8001"
     paths:
-      get-slide-show-data: "json"
+      get-slide-show-data: "/json"
 
 oauth2:
   tokens:

@@ -14,6 +14,7 @@
     <artifactId>springboot-playground</artifactId>
     <version>0.0.1</version>
     <name>springboot-playground</name>
+    <description>A springboot playground project</description>
 
     <organization>
         <name>dev.coding</name>
@@ -191,7 +192,7 @@
     </profiles>
 
     <build>
-        <finalName>springboot-boilderplate</finalName>
+        <finalName>springboot-playground</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

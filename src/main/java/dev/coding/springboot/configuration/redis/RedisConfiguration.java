@@ -1,7 +1,6 @@
 package dev.coding.springboot.configuration.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -9,7 +8,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@EnableCaching
 public class RedisConfiguration {
 
     public static final String REDIS_TEMPLATE_WITH_JSON_VALUE = "redisTemplateWithJsonValue";
