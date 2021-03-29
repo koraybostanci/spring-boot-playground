@@ -1,6 +1,7 @@
 package dev.coding.springboot.gateway.httpbin;
 
 import dev.coding.springboot.configuration.ServiceEndpointProperties;
+import dev.coding.springboot.configuration.ServiceEndpointProperties.ServiceEndpoint;
 import dev.coding.springboot.gateway.RestCallFailedException;
 import dev.coding.springboot.gateway.httpbin.data.SlideShowData;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.ResponseEntity.notFound;
+import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,8 +56,7 @@ public class HttpBinRestGatewayTest {
 
     @Test
     public void getSlideShowData_throwsRestCallFailedException_whenRestCallThrowsRestClientException() {
-        final RequestEntity requestEntity = requestEntityOfGetSlideShowData();
-        when(restTemplate.exchange(requestEntity, SlideShowData.class)).thenThrow(new RestClientException("RestCallFailed"));
+        when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenThrow(new RestClientException("RestCallFailed"));
 
         assertThrows(RestCallFailedException.class, () -> httpBinRestGateway.getSlideShowData());
     }
@@ -76,34 +77,34 @@ public class HttpBinRestGatewayTest {
 
     @Test
     public void getSlideShowData_throwsRestCallFailedException_whenRestCallReturnsNotFound() {
-        when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenReturn(new ResponseEntity<>(NOT_FOUND));
+        when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenReturn(notFound().build());
 
         assertThrows(RestCallFailedException.class, () -> httpBinRestGateway.getSlideShowData());
     }
 
     @Test
-    public void getSlideShowData_returnsSlideShowData_whenRestCallReturnsHttpOkWithData() {
+    public void getSlideShowData_returnsSlideShowData_whenRestCallReturnsSuccessWithData() {
         final SlideShowData anySlideShowData = anySlideShowData();
 
-        when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenReturn(ResponseEntity.ok(anySlideShowData));
+        when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenReturn(ok(anySlideShowData));
 
         final SlideShowData retrievedSlideShowData = httpBinRestGateway.getSlideShowData().get();
         assertThat(retrievedSlideShowData).isEqualTo(anySlideShowData);
     }
 
     @Test
-    public void getSlideShowData_returnsSlideShowData_whenRestCallReturnsHttpOkWithoutData() {
-        when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenReturn(ResponseEntity.ok(null));
+    public void getSlideShowData_returnsSlideShowData_whenRestCallReturnsSuccessWithoutData() {
+        when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenReturn(ok(null));
 
         final Optional<SlideShowData> retrievedSlideShowData = httpBinRestGateway.getSlideShowData();
         assertThat(retrievedSlideShowData).isEmpty();
     }
 
-    private ServiceEndpointProperties.ServiceEndpoint getHttpBinServiceEndpoint() {
+    private ServiceEndpoint getHttpBinServiceEndpoint() {
         final Map<String, String> paths = new HashMap<>();
         paths.put(HTTP_BIN_ENDPOINT_SLIDES_PATH_KEY, HTTP_BIN_ENDPOINT_SLIDES_PATH_VALUE);
 
-        final ServiceEndpointProperties.ServiceEndpoint httpBinServiceEndpoint = new ServiceEndpointProperties.ServiceEndpoint();
+        final ServiceEndpoint httpBinServiceEndpoint = new ServiceEndpoint();
         httpBinServiceEndpoint.setBaseUrl(HTTP_BIN_ENDPOINT_BASE_URL);
         httpBinServiceEndpoint.setPaths(paths);
         return httpBinServiceEndpoint;
