@@ -1,4 +1,4 @@
-package dev.coding.springboot.common;
+package dev.coding.springboot.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -13,7 +13,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import static dev.coding.springboot.common.TestObjectFactory.configureTestObjectMapper;
+import static dev.coding.springboot.common.TestObjectMapper.getTestObjectMapper;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testcontainers.containers.wait.strategy.Wait.forListeningPort;
 
@@ -28,14 +28,14 @@ public class AbstractIntegrationTest {
     private static final int REDIS_PORT = 6379;
     private static final int WIREMOCK_PORT = 8001;
 
-    private final static ObjectMapper objectMapper = configureTestObjectMapper();
+    private final static ObjectMapper objectMapper = getTestObjectMapper();
     private final static WireMockServer wireMockServer = new WireMockServer(WIREMOCK_PORT);
 
     public ObjectMapper getObjectMapper() {
         return objectMapper;
     }
 
-    public static WireMockServer getWireMockServer() {
+    public WireMockServer getWireMockServer() {
         return wireMockServer;
     }
 
@@ -88,5 +88,3 @@ public class AbstractIntegrationTest {
     }
 
 }
-
-

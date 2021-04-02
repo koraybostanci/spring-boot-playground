@@ -1,8 +1,6 @@
 package dev.coding.springboot.rest.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import dev.coding.springboot.common.AbstractIntegrationTest;
+import dev.coding.springboot.base.AbstractIntegrationTest;
 import dev.coding.springboot.gateway.httpbin.HttpBinRestGateway;
 import dev.coding.springboot.gateway.httpbin.data.SlideShowData;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,17 +14,15 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.IOException;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static dev.coding.springboot.common.TestConstants.PROFILE_INTEGRATION_TEST;
 import static dev.coding.springboot.common.TestObjectFactory.anySlideShowData;
+import static dev.coding.springboot.common.TestStubFactory.stubForGetSlidesOnSuccess;
+import static dev.coding.springboot.common.TestObjectMapper.toObject;
 import static dev.coding.springboot.configuration.CacheConfiguration.SLIDE_SHOW_DATA_CACHE_NAME;
-import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @ActiveProfiles(PROFILE_INTEGRATION_TEST)
@@ -52,10 +48,10 @@ public class HttpBinControllerIT extends AbstractIntegrationTest {
     @Test
     public void getSlides_returnsSlideShowData_whenCallToHttpBinEndpointSucceeds() throws Exception {
         final SlideShowData anySlideShowData = anySlideShowData();
-        stubForGetSlidesOnSuccess(anySlideShowData);
+        stubForGetSlidesOnSuccess(getWireMockServer(), getObjectMapper(), anySlideShowData);
 
         final MockHttpServletResponse response = callGetSlidesEndpoint();
-        final SlideShowData retrievedSlideShowData = toObject(response.getContentAsByteArray(), SlideShowData.class);
+        final SlideShowData retrievedSlideShowData = toObject(getObjectMapper(), response.getContentAsByteArray(), SlideShowData.class);
 
         assertThat(response.getStatus()).isEqualTo(OK.value());
         assertThat(retrievedSlideShowData).isEqualTo(anySlideShowData);
@@ -64,24 +60,12 @@ public class HttpBinControllerIT extends AbstractIntegrationTest {
     @Test
     public void getSlides_returnsSlideShowDataFromCacheAndDoesNotCallGateway_whenCacheContainsData() throws Exception {
         final SlideShowData anySlideShowData = anySlideShowData();
-        stubForGetSlidesOnSuccess(anySlideShowData);
+        stubForGetSlidesOnSuccess(getWireMockServer(), getObjectMapper(), anySlideShowData);
 
         callGetSlidesEndpoint();
         callGetSlidesEndpoint();
 
         verify(httpBinRestGateway, times(1)).getSlideShowData();
-    }
-
-    private <T> T toObject(final byte[] contentAsByteArray, final Class<T> type) throws IOException {
-        return getObjectMapper().readValue(contentAsByteArray, type);
-    }
-
-    private void stubForGetSlidesOnSuccess(final SlideShowData anySlideShowData) throws JsonProcessingException {
-        getWireMockServer().stubFor(WireMock.get(urlPathEqualTo("/json"))
-                .willReturn(aResponse()
-                        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                        .withStatus(OK.value())
-                        .withBody(getObjectMapper().writeValueAsBytes(anySlideShowData))));
     }
 
     private MockHttpServletResponse callGetSlidesEndpoint() throws Exception {

@@ -1,6 +1,7 @@
 package dev.coding.springboot.gateway;
 
 import dev.coding.springboot.configuration.ServiceEndpointProperties.ServiceEndpoint;
+import dev.coding.springboot.common.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,7 +24,7 @@ public abstract class RestGateway {
 
     private static final String REST_CALL_TO_URI = "Calling uri [{}] with requestEntity [{}]";
     private static final String REST_CALL_TO_URI_RESPONDED = "Rest call to uri [{}] responded with [{}]";
-    private static final String REST_CALL_TO_URI_FAILED = "Rest call to uri [%s] failed with [%s]";
+    private static final String REST_CALL_TO_URI_FAILED = "Rest call to uri [%s] failed with reason: [%s]";
 
     private final RestTemplate restTemplate;
     private final ServiceEndpoint serviceEndpoint;
@@ -46,7 +47,7 @@ public abstract class RestGateway {
             responseEntity = restTemplate.exchange(requestEntity, returnType);
             log.info(REST_CALL_TO_URI_RESPONDED, uri, responseEntity);
         } catch (final RestClientException ex) {
-            throw new RestCallFailedException(format(REST_CALL_TO_URI_FAILED, uri, ex), ex);
+            throw new SystemException(format(REST_CALL_TO_URI_FAILED, uri, ex), ex);
         }
 
         return processResponseEntity(uri, responseEntity);
@@ -54,11 +55,11 @@ public abstract class RestGateway {
 
     private <T> Optional<T> processResponseEntity(final URI uri, final ResponseEntity<T> responseEntity) {
         if (responseEntity == null) {
-            throw new RestCallFailedException(format(REST_CALL_TO_URI_FAILED, uri, "Null responseEntity"));
+            throw new SystemException(format(REST_CALL_TO_URI_FAILED, uri, "Null responseEntity"));
         }
 
         if (!isSuccessfulResponse(responseEntity)) {
-            throw new RestCallFailedException(format(REST_CALL_TO_URI_FAILED, uri, format("Unsuccessful responseCode: %s", responseEntity.getStatusCode())));
+            throw new SystemException(format(REST_CALL_TO_URI_FAILED, uri, format("Unsuccessful responseCode: %s", responseEntity.getStatusCode())));
         }
 
         return ofNullable(responseEntity.getBody());
