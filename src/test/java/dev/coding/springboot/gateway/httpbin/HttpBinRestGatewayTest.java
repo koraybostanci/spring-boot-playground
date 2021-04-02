@@ -2,7 +2,7 @@ package dev.coding.springboot.gateway.httpbin;
 
 import dev.coding.springboot.configuration.ServiceEndpointProperties;
 import dev.coding.springboot.configuration.ServiceEndpointProperties.ServiceEndpoint;
-import dev.coding.springboot.gateway.RestCallFailedException;
+import dev.coding.springboot.common.exception.SystemException;
 import dev.coding.springboot.gateway.httpbin.data.SlideShowData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,31 +55,31 @@ public class HttpBinRestGatewayTest {
     }
 
     @Test
-    public void getSlideShowData_throwsRestCallFailedException_whenRestCallThrowsRestClientException() {
+    public void getSlideShowData_throwsSystemException_whenRestCallThrowsRestClientException() {
         when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenThrow(new RestClientException("RestCallFailed"));
 
-        assertThrows(RestCallFailedException.class, () -> httpBinRestGateway.getSlideShowData());
+        assertThrows(SystemException.class, () -> httpBinRestGateway.getSlideShowData());
     }
 
     @Test
-    public void getSlideShowData_throwsRestCallFailedException_whenRestCallDoesNotReturnResponseEntity() {
+    public void getSlideShowData_throwsSystemException_whenRestCallDoesNotReturnResponseEntity() {
         when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenReturn(null);
 
-        assertThrows(RestCallFailedException.class, () -> httpBinRestGateway.getSlideShowData());
+        assertThrows(SystemException.class, () -> httpBinRestGateway.getSlideShowData());
     }
 
     @Test
-    public void getSlideShowData_throwsRestCallFailedException_whenRestCallReturnsInternalServerError() {
+    public void getSlideShowData_throwsSystemException_whenRestCallReturnsInternalServerError() {
         when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenReturn(new ResponseEntity<>(INTERNAL_SERVER_ERROR));
 
-        assertThrows(RestCallFailedException.class, () -> httpBinRestGateway.getSlideShowData());
+        assertThrows(SystemException.class, () -> httpBinRestGateway.getSlideShowData());
     }
 
     @Test
-    public void getSlideShowData_throwsRestCallFailedException_whenRestCallReturnsNotFound() {
+    public void getSlideShowData_throwsSystemException_whenRestCallReturnsNotFound() {
         when(restTemplate.exchange(requestEntityOfGetSlideShowData(), SlideShowData.class)).thenReturn(notFound().build());
 
-        assertThrows(RestCallFailedException.class, () -> httpBinRestGateway.getSlideShowData());
+        assertThrows(SystemException.class, () -> httpBinRestGateway.getSlideShowData());
     }
 
     @Test

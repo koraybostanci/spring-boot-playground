@@ -3,6 +3,7 @@ package dev.coding.springboot.gateway.httpbin;
 import dev.coding.springboot.configuration.ServiceEndpointProperties;
 import dev.coding.springboot.gateway.RestGateway;
 import dev.coding.springboot.gateway.httpbin.data.SlideShowData;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +23,7 @@ public class HttpBinRestGateway extends RestGateway {
         super(restTemplate, serviceEndpointProperties.getHttpBin());
     }
 
+    @Retry(name = "rest-default")
     public Optional<SlideShowData> getSlideShowData() {
         final URI uri = fromHttpUrl(getServiceEndpoint().getBaseUrl())
                 .path(getServiceEndpoint().getPath(GET_SLIDE_SHOW_DATA_KEY))

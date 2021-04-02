@@ -1,6 +1,6 @@
 package dev.coding.springboot.queue.inbox;
 
-import dev.coding.springboot.common.AbstractIntegrationTest;
+import dev.coding.springboot.base.AbstractIntegrationTest;
 import dev.coding.springboot.configuration.rabbitmq.RabbitMQProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

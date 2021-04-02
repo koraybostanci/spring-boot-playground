@@ -1,6 +1,6 @@
 spring:
   application:
-    name: @project.name@
+    name: springboot-playground
   jmx:
     enabled: false
   rabbitmq:
@@ -74,3 +74,16 @@ server:
 logging:
   level:
     root: info
+
+resilience4j:
+  retry:
+    instances:
+      rest-default:
+        maxAttempts: 3
+        waitDuration: 100
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - dev.coding.springboot.common.exception.SystemException
+        ignoreExceptions:
+          - dev.coding.springboot.common.exception.BusinessException
