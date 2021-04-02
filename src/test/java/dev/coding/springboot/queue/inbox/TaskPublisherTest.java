@@ -12,7 +12,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static dev.coding.springboot.common.TestConstants.ANY_EXCHANGE_NAME;
 import static dev.coding.springboot.common.TestConstants.ANY_TASK_NAME;
-import static dev.coding.springboot.common.TestObjectFactory.*;
+import static dev.coding.springboot.common.TestObjectFactory.anyInboxQueue;
+import static dev.coding.springboot.common.TestObjectFactory.anyTaskWithName;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;

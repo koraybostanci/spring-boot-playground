@@ -15,7 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static dev.coding.springboot.common.TestConstants.*;
+import static dev.coding.springboot.common.TestConstants.ANY_EXCHANGE_NAME;
+import static dev.coding.springboot.common.TestConstants.ANY_QUEUE_NAME;
+import static dev.coding.springboot.common.TestConstants.ANY_ROUTING_KEY;
+import static dev.coding.springboot.common.TestConstants.ANY_TASK_NAME;
+import static dev.coding.springboot.common.TestConstants.PROFILE_INTEGRATION_TEST;
 import static dev.coding.springboot.common.TestObjectFactory.anyTaskWithName;
 import static java.lang.Thread.sleep;
 import static org.assertj.core.api.Assertions.assertThat;
