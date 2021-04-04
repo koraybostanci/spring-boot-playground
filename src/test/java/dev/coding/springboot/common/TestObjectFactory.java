@@ -1,10 +1,10 @@
 package dev.coding.springboot.common;
 
-import dev.coding.springboot.configuration.rabbitmq.RabbitMQProperties.Inbox;
-import dev.coding.springboot.gateway.httpbin.data.Slide;
-import dev.coding.springboot.gateway.httpbin.data.SlideShow;
-import dev.coding.springboot.gateway.httpbin.data.SlideShowData;
-import dev.coding.springboot.queue.inbox.Task;
+import dev.coding.springboot.common.configuration.rabbitmq.RabbitMQProperties.Inbox;
+import dev.coding.springboot.httpbin.gateway.data.Slide;
+import dev.coding.springboot.httpbin.gateway.data.SlideShow;
+import dev.coding.springboot.httpbin.gateway.data.SlideShowData;
+import dev.coding.springboot.task.queue.inbox.Task;
 
 import java.util.List;
 
