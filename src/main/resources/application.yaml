@@ -1,6 +1,14 @@
 spring:
   application:
     name: springboot-playground
+  jackson:
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      INDENT_OUTPUT: true
+      write_dates_as_timestamps: false
+    serialization-inclusion: non_null
   jmx:
     enabled: false
   rabbitmq:
@@ -33,7 +41,7 @@ spring:
       time-to-live: 10000 # 10 secs
 management:
   server:
-    port: 7979
+    port: 8090
   endpoints:
     web:
       base-path: /
