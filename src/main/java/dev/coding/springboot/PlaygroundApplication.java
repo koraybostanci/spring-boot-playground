@@ -6,10 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application {
+public class PlaygroundApplication {
 
     public static void main(String[] args) {
-        final SpringApplication app = new SpringApplication(Application.class);
+        final SpringApplication app = new SpringApplication(PlaygroundApplication.class);
         app.setBannerMode(OFF);
         app.run(args);
     }

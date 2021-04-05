@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @Validated
-@ConfigurationProperties("rabbitmq")
+@ConfigurationProperties("application.rabbitmq")
 public class RabbitMQProperties {
 
     @NotBlank
@@ -24,9 +24,9 @@ public class RabbitMQProperties {
     public static class Inbox extends Queue { }
     public static class DeadLetter extends Queue { }
 
-    @Validated
     @Getter
     @Setter
+    @Validated
     public static class Queue {
         @NotBlank
         private String queueName;

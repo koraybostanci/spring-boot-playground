@@ -5,16 +5,17 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 @Getter
-@Setter
 @Validated
-@ConfigurationProperties("service-endpoints")
+@ConfigurationProperties("application.service-endpoints")
 public class ServiceEndpointProperties {
 
-    private ServiceEndpoint httpBin = new ServiceEndpoint();
+    @Valid
+    private final ServiceEndpoint httpBin = new ServiceEndpoint();
 
     @Getter
     @Setter

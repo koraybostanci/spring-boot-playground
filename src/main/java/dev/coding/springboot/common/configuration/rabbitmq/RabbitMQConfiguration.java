@@ -16,7 +16,7 @@ import static org.springframework.amqp.core.QueueBuilder.durable;
 @Configuration
 public class RabbitMQConfiguration {
 
-    public static final String INBOX_QUEUE_NAME = "${rabbitmq.inbox.queue-name}";
+    public static final String INBOX_QUEUE_NAME = "${application.rabbitmq.inbox.queue-name}";
 
     private final RabbitMQProperties rabbitMQProperties;
 
