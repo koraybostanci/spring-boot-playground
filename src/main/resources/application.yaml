@@ -2,9 +2,9 @@ spring:
   application:
     name: springboot-playground
   jackson:
+    property-naming-strategy: SNAKE_CASE
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: false
-    property-naming-strategy: SNAKE_CASE
     serialization:
       INDENT_OUTPUT: true
       write_dates_as_timestamps: false
@@ -39,6 +39,30 @@ spring:
     type: redis
     redis:
       time-to-live: 10000 # 10 secs
+
+# Begin: Application
+application:
+  rabbitmq:
+    exchange-name: ha.app
+    inbox:
+      routing-key: inbox
+      queue-name: ha.app.inbox
+    dead-letter:
+      routing-key: dead-letter
+      queue-name: ha.app.dead-letter
+  service-endpoints:
+    http-bin:
+      base-url: "http://localhost:8001"
+      paths:
+        get-slide-show-data: "/json"
+# End: Application
+
+server:
+  port: 8080
+  shutdown: graceful
+  error:
+    include-message: always
+
 management:
   server:
     port: 8090
@@ -52,46 +76,29 @@ management:
           - metrics
           - prometheus
 
-rabbitmq:
-  exchange-name: ha.app
-  inbox:
-    routing-key: inbox
-    queue-name: ha.app.inbox
-  dead-letter:
-    routing-key: dead-letter
-    queue-name: ha.app.dead-letter
-
-service-endpoints:
-  http-bin:
-    base-url: "http://localhost:8001"
-    paths:
-      get-slide-show-data: "/json"
-
-oauth2:
-  tokens:
-    token-info-uri: ""
-    access-token-uri: ""
-  scopes:
-    read: ""
-    write: ""
-
-server:
-  port: 8080
-  shutdown: graceful
-
 logging:
   level:
     root: info
+    #dev.coding.springboot: debug
 
-resilience4j:
-  retry:
-    instances:
-      rest-default:
+#oauth2:
+#  tokens:
+#    token-info-uri: ""
+#    access-token-uri: ""
+#  scopes:
+#    read: ""
+#    write: ""
+
+resilience4j.retry:
+    configs:
+      default:
         maxAttempts: 3
-        waitDuration: 100
+        waitDuration: 200
         enableExponentialBackoff: true
         exponentialBackoffMultiplier: 2
         retryExceptions:
+          - java.io.IOException
           - dev.coding.springboot.common.exception.SystemException
-        ignoreExceptions:
-          - dev.coding.springboot.common.exception.BusinessException
+    instances:
+      rest-default:
+        baseConfig: default
