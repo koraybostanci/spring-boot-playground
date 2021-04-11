@@ -1,6 +1,6 @@
 package dev.coding.springboot.task.queue.inbox;
 
-import dev.coding.springboot.base.AbstractIntegrationTest;
+import dev.coding.springboot.base.ContainerAwareIT;
 import dev.coding.springboot.common.configuration.rabbitmq.RabbitMQProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import static org.springframework.amqp.core.QueueBuilder.nonDurable;
 @ActiveProfiles(PROFILE_INTEGRATION_TEST)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class TaskPublisherIT extends AbstractIntegrationTest {
+public class TaskPublisherIT extends ContainerAwareIT {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;

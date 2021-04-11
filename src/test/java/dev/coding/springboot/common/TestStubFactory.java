@@ -8,13 +8,16 @@ import dev.coding.springboot.httpbin.gateway.data.SlideShowData;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static dev.coding.springboot.common.TestObjectMapper.getTestObjectMapper;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class TestStubFactory {
 
-    public static void stubForGetSlidesOnSuccess(final WireMockServer wireMockServer, final ObjectMapper objectMapper, final SlideShowData anySlideShowData) throws JsonProcessingException {
+    private final static ObjectMapper objectMapper = getTestObjectMapper();
+
+    public static void stubForGetSlidesOnSuccess(final WireMockServer wireMockServer, final SlideShowData anySlideShowData) throws JsonProcessingException {
         wireMockServer.stubFor(WireMock.get(urlPathEqualTo("/json"))
                 .willReturn(aResponse()
                         .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
@@ -33,7 +36,7 @@ public class TestStubFactory {
                 .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR.value())));
     }
 
-    public static void stubForGetSlidesOnNoResponseCode(final WireMockServer wireMockServer, final ObjectMapper objectMapper) throws JsonProcessingException {
+    public static void stubForGetSlidesOnNoResponseCode(final WireMockServer wireMockServer) throws JsonProcessingException {
         wireMockServer.stubFor(WireMock.get(urlPathEqualTo("/json"))
                 .willReturn(aResponse()
                         .withStatus(OK.value())

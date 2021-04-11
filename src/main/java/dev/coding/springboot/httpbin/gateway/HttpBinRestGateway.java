@@ -20,7 +20,7 @@ public class HttpBinRestGateway extends RestGateway {
     private static final String GET_SLIDE_SHOW_DATA_KEY = "get-slide-show-data";
 
     public HttpBinRestGateway(final RestTemplate restTemplate, final ServiceEndpointProperties serviceEndpointProperties) {
-        super(restTemplate, serviceEndpointProperties.getHttpBin());
+        super(restTemplate, serviceEndpointProperties.getHttpBinService());
     }
 
     @Retry(name = "rest-default")

@@ -15,12 +15,16 @@ import java.util.Map;
 public class ServiceEndpointProperties {
 
     @Valid
-    private final ServiceEndpoint httpBin = new ServiceEndpoint();
+    private final ServiceEndpoint httpBinService = new ServiceEndpoint();
 
     @Getter
     @Setter
     @Validated
     public static class ServiceEndpoint {
+
+        @Valid
+        private final ConnectionProperties connection = new ConnectionProperties();
+
         @NotBlank
         private String baseUrl;
         private Map<String, String> paths;
@@ -28,5 +32,16 @@ public class ServiceEndpointProperties {
         public String getPath(final String key) {
             return paths.get(key);
         }
+    }
+
+    @Getter
+    @Setter
+    @Validated
+    public static class ConnectionProperties {
+        private int numberOfRoutes = 1;
+        private int maxConnectionsPerRoute = 100;
+        private int connectionRequestTimeout = 1000;
+        private int connectTimeout = 1000;
+        private int socketTimeout = 1000;
     }
 }

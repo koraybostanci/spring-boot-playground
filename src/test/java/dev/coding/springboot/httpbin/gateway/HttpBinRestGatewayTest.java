@@ -4,7 +4,6 @@ import dev.coding.springboot.common.configuration.ServiceEndpointProperties;
 import dev.coding.springboot.common.configuration.ServiceEndpointProperties.ServiceEndpoint;
 import dev.coding.springboot.common.exception.SystemException;
 import dev.coding.springboot.httpbin.gateway.data.SlideShowData;
-import dev.coding.springboot.httpbin.gateway.HttpBinRestGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,9 +35,9 @@ import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 @ExtendWith(MockitoExtension.class)
 public class HttpBinRestGatewayTest {
 
-    private static final String HTTP_BIN_ENDPOINT_BASE_URL = "http://localhost:9000";
-    private static final String HTTP_BIN_ENDPOINT_SLIDES_PATH_KEY = "get-slide-show-data";
-    private static final String HTTP_BIN_ENDPOINT_SLIDES_PATH_VALUE = "/path";
+    private static final String HTTP_BIN_SERVICE_ENDPOINT_BASE_URL = "http://localhost:9000";
+    private static final String HTTP_BIN_SERVICE_ENDPOINT_SLIDES_PATH_KEY = "get-slide-show-data";
+    private static final String HTTP_BIN_SERVICE_ENDPOINT_SLIDES_PATH_VALUE = "/path";
 
     private HttpBinRestGateway httpBinRestGateway;
 
@@ -50,7 +49,7 @@ public class HttpBinRestGatewayTest {
 
     @BeforeEach
     void onBeforeEach() {
-        when(serviceEndpointProperties.getHttpBin()).thenReturn(getHttpBinServiceEndpoint());
+        when(serviceEndpointProperties.getHttpBinService()).thenReturn(getHttpBinServiceEndpoint());
 
         httpBinRestGateway = new HttpBinRestGateway(restTemplate, serviceEndpointProperties);
     }
@@ -103,10 +102,10 @@ public class HttpBinRestGatewayTest {
 
     private ServiceEndpoint getHttpBinServiceEndpoint() {
         final Map<String, String> paths = new HashMap<>();
-        paths.put(HTTP_BIN_ENDPOINT_SLIDES_PATH_KEY, HTTP_BIN_ENDPOINT_SLIDES_PATH_VALUE);
+        paths.put(HTTP_BIN_SERVICE_ENDPOINT_SLIDES_PATH_KEY, HTTP_BIN_SERVICE_ENDPOINT_SLIDES_PATH_VALUE);
 
         final ServiceEndpoint httpBinServiceEndpoint = new ServiceEndpoint();
-        httpBinServiceEndpoint.setBaseUrl(HTTP_BIN_ENDPOINT_BASE_URL);
+        httpBinServiceEndpoint.setBaseUrl(HTTP_BIN_SERVICE_ENDPOINT_BASE_URL);
         httpBinServiceEndpoint.setPaths(paths);
         return httpBinServiceEndpoint;
     }
@@ -116,8 +115,8 @@ public class HttpBinRestGatewayTest {
     }
 
     private URI uriOfGetSlideShowData() {
-        return fromHttpUrl(serviceEndpointProperties.getHttpBin().getBaseUrl())
-                .path(serviceEndpointProperties.getHttpBin().getPath(HTTP_BIN_ENDPOINT_SLIDES_PATH_KEY))
+        return fromHttpUrl(serviceEndpointProperties.getHttpBinService().getBaseUrl())
+                .path(serviceEndpointProperties.getHttpBinService().getPath(HTTP_BIN_SERVICE_ENDPOINT_SLIDES_PATH_KEY))
                 .build().toUri();
     }
 
