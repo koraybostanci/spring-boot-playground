@@ -1,10 +1,12 @@
 package dev.coding.springboot.httpbin.gateway;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import dev.coding.springboot.base.AbstractIntegrationTest;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import dev.coding.springboot.base.ContainerAwareIT;
 import dev.coding.springboot.common.exception.SystemException;
 import dev.coding.springboot.httpbin.gateway.data.SlideShowData;
-import dev.coding.springboot.httpbin.gateway.HttpBinRestGateway;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +30,10 @@ import static org.mockito.Mockito.verify;
 
 @ActiveProfiles(PROFILE_INTEGRATION_TEST)
 @SpringBootTest
-public class HttpBinRestGatewayIT extends AbstractIntegrationTest {
+public class HttpBinRestGatewayIT extends ContainerAwareIT {
+
+    private static final int WIREMOCK_PORT = 8001;
+    private static final WireMockServer wireMockServer = new WireMockServer(WIREMOCK_PORT);
 
     @Autowired
     private HttpBinRestGateway httpBinRestGateway;
@@ -36,10 +41,20 @@ public class HttpBinRestGatewayIT extends AbstractIntegrationTest {
     @SpyBean
     private RestTemplate restTemplate;
 
+    @BeforeAll
+    public static void onBeforeAll() {
+        wireMockServer.start();
+    }
+
+    @AfterAll
+    public static void onAfterAll() {
+        wireMockServer.stop();
+    }
+
     @Test
     public void getSlideShowData_returnsData_whenGatewaySucceeds() throws JsonProcessingException {
         final SlideShowData anySlideShowData = anySlideShowData();
-        stubForGetSlidesOnSuccess(getWireMockServer(), getObjectMapper(), anySlideShowData);
+        stubForGetSlidesOnSuccess(wireMockServer, anySlideShowData);
 
         final SlideShowData retrievedSlideShowData = httpBinRestGateway.getSlideShowData().get();
 
@@ -49,7 +64,7 @@ public class HttpBinRestGatewayIT extends AbstractIntegrationTest {
 
     @Test
     public void getSlideShowData_retriesForConfiguredAttemptCount_whenRestCallDoesNotReturnResponseEntity() throws JsonProcessingException {
-        stubForGetSlidesOnNoResponseCode(getWireMockServer(), getObjectMapper());
+        stubForGetSlidesOnNoResponseCode(wireMockServer);
 
         assertThrows(SystemException.class, () -> httpBinRestGateway.getSlideShowData());
         verify(restTemplate, times(3)).exchange(any(RequestEntity.class), eq(SlideShowData.class));
@@ -57,7 +72,7 @@ public class HttpBinRestGatewayIT extends AbstractIntegrationTest {
 
     @Test
     public void getSlideShowData_retriesForConfiguredAttemptCount_whenRestCallReturnsInternalServerError() {
-        stubForGetSlidesOnInternalServerError(getWireMockServer());
+        stubForGetSlidesOnInternalServerError(wireMockServer);
 
         assertThrows(SystemException.class, () -> httpBinRestGateway.getSlideShowData());
         verify(restTemplate, times(3)).exchange(any(RequestEntity.class), eq(SlideShowData.class));
@@ -65,7 +80,7 @@ public class HttpBinRestGatewayIT extends AbstractIntegrationTest {
 
     @Test
     public void getSlideShowData_retriesForConfiguredAttemptCount_whenRestCallReturnsNotFound() {
-        stubForGetSlidesOnNotFound(getWireMockServer());
+        stubForGetSlidesOnNotFound(wireMockServer);
 
         assertThrows(SystemException.class, () -> httpBinRestGateway.getSlideShowData());
         verify(restTemplate, times(3)).exchange(any(RequestEntity.class), eq(SlideShowData.class));

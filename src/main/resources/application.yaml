@@ -51,8 +51,8 @@ application:
       routing-key: dead-letter
       queue-name: ha.app.dead-letter
   service-endpoints:
-    http-bin:
-      base-url: "http://localhost:8001"
+    http-bin-service:
+      base-url: ${SERVICE_ENDPOINT_HTTP_BIN_SERVICE_BASE_URL:http://localhost:8001}
       paths:
         get-slide-show-data: "/json"
 # End: Application
@@ -60,8 +60,6 @@ application:
 server:
   port: 8080
   shutdown: graceful
-  error:
-    include-message: always
 
 management:
   server:

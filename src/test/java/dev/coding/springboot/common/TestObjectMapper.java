@@ -11,7 +11,7 @@ public class TestObjectMapper {
         return objectMapper;
     }
 
-    public static <T> T toObject(final ObjectMapper objectMapper, final byte[] contentAsByteArray, final Class<T> type) throws IOException {
-        return objectMapper.readValue(contentAsByteArray, type);
+    public static <T> T toObject(final byte[] contentAsByteArray, final Class<T> type) throws IOException {
+        return getTestObjectMapper().readValue(contentAsByteArray, type);
     }
 }

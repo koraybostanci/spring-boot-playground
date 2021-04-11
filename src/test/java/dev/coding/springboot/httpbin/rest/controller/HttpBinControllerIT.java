@@ -1,8 +1,11 @@
 package dev.coding.springboot.httpbin.rest.controller;
 
-import dev.coding.springboot.base.AbstractIntegrationTest;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import dev.coding.springboot.base.ContainerAwareIT;
 import dev.coding.springboot.httpbin.gateway.HttpBinRestGateway;
 import dev.coding.springboot.httpbin.gateway.data.SlideShowData;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +31,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ActiveProfiles(PROFILE_INTEGRATION_TEST)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class HttpBinControllerIT extends AbstractIntegrationTest {
+public class HttpBinControllerIT extends ContainerAwareIT {
+
+    private static final int WIREMOCK_PORT = 8001;
+    private static final WireMockServer wireMockServer = new WireMockServer(WIREMOCK_PORT);
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,19 +45,28 @@ public class HttpBinControllerIT extends AbstractIntegrationTest {
     @SpyBean
     private HttpBinRestGateway httpBinRestGateway;
 
+    @BeforeAll
+    public static void onBeforeAll() {
+        wireMockServer.start();
+    }
+
+    @AfterAll
+    public static void onAfterAll() {
+        wireMockServer.stop();
+    }
+
     @BeforeEach
     public void onBeforeEach() {
-        getWireMockServer().resetAll();
         cacheManager.getCache(SLIDE_SHOW_DATA_CACHE_NAME).clear();
     }
 
     @Test
     public void getSlides_returnsSlideShowData_whenCallToHttpBinEndpointSucceeds() throws Exception {
         final SlideShowData anySlideShowData = anySlideShowData();
-        stubForGetSlidesOnSuccess(getWireMockServer(), getObjectMapper(), anySlideShowData);
+        stubForGetSlidesOnSuccess(wireMockServer, anySlideShowData);
 
         final MockHttpServletResponse response = callGetSlidesEndpoint();
-        final SlideShowData retrievedSlideShowData = toObject(getObjectMapper(), response.getContentAsByteArray(), SlideShowData.class);
+        final SlideShowData retrievedSlideShowData = toObject(response.getContentAsByteArray(), SlideShowData.class);
 
         assertThat(response.getStatus()).isEqualTo(OK.value());
         assertThat(retrievedSlideShowData).isEqualTo(anySlideShowData);
@@ -60,7 +75,7 @@ public class HttpBinControllerIT extends AbstractIntegrationTest {
     @Test
     public void getSlides_returnsSlideShowDataFromCacheAndDoesNotCallGateway_whenCacheContainsData() throws Exception {
         final SlideShowData anySlideShowData = anySlideShowData();
-        stubForGetSlidesOnSuccess(getWireMockServer(), getObjectMapper(), anySlideShowData);
+        stubForGetSlidesOnSuccess(wireMockServer, anySlideShowData);
 
         callGetSlidesEndpoint();
         callGetSlidesEndpoint();

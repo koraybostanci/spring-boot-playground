@@ -1,32 +1,43 @@
 package dev.coding.springboot.common.configuration;
 
+import org.apache.http.client.config.RequestConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import static org.apache.http.impl.client.HttpClientBuilder.create;
+
 @Configuration
 public class RestConfiguration {
 
-    private static final int CONNECTION_REQUEST_TIMEOUT = 1_000;
-    private static final int CONNECT_TIMEOUT = 1_000;
-    private static final int READ_TIMEOUT = 1_000;
+    public static final String HTTP_BIN_SERVICE_REST_TEMPLATE = "httpBinServiceRestTemplate";
 
-    @Bean
-    @Primary
-    public RestTemplate getDefaultRestTemplate() {
-        final RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(httpRequestFactory());
-        return restTemplate;
+    @Bean(HTTP_BIN_SERVICE_REST_TEMPLATE)
+    public RestTemplate getHttpBinServiceRestTemplate(final ServiceEndpointProperties properties) {
+        return getRestTemplate(properties.getHttpBinService());
     }
-    
-    private ClientHttpRequestFactory httpRequestFactory() {
-        final HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        httpRequestFactory.setConnectionRequestTimeout(CONNECTION_REQUEST_TIMEOUT);
-        httpRequestFactory.setConnectTimeout(CONNECT_TIMEOUT);
-        httpRequestFactory.setReadTimeout(READ_TIMEOUT);
+
+    private RestTemplate getRestTemplate(final ServiceEndpointProperties.ServiceEndpoint endpoint) {
+        return new RestTemplate(clientHttpRequestFactory(endpoint));
+    }
+
+    public ClientHttpRequestFactory clientHttpRequestFactory(final ServiceEndpointProperties.ServiceEndpoint endpoint) {
+        final ServiceEndpointProperties.ConnectionProperties connection = endpoint.getConnection();
+        final RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectionRequestTimeout(connection.getConnectionRequestTimeout())
+                .setConnectTimeout(connection.getConnectTimeout())
+                .setSocketTimeout(connection.getSocketTimeout())
+                .build();
+
+        final HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory(create()
+                .setDefaultRequestConfig(requestConfig)
+                .setMaxConnPerRoute(connection.getMaxConnectionsPerRoute())
+                .setMaxConnTotal(connection.getMaxConnectionsPerRoute() * connection.getNumberOfRoutes())
+                .build());
+
         return httpRequestFactory;
     }
+
 }

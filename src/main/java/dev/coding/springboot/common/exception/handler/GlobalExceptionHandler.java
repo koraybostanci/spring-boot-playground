@@ -24,17 +24,17 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final MediaType mediaTypeProblem = new MediaType("application", "problem+json");
     private static final HttpHeaders headers = new HttpHeaders();
     private static final Map<Class<? extends Exception>, HttpStatus> exceptionsMap = new HashMap<>();
 
     static {
-        headers.setContentType(mediaTypeProblem);
+        headers.setContentType(APPLICATION_PROBLEM_JSON);
 
         exceptionsMap.put(SystemException.class, INTERNAL_SERVER_ERROR);
         exceptionsMap.put(BusinessException.class, BAD_REQUEST);
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> handleException(final Exception ex) {
-        log.warn(getMessage(ex));
+        logException(ex);
         final HttpStatus status = exceptionsMap.getOrDefault(ex.getClass(), INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(problemOf(ex, status), headers, status);
     }
@@ -56,5 +56,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(status.value())
                 .message(getMessage(ex))
                 .build();
+    }
+
+    private void logException(final Exception ex) {
+        if (ex instanceof BusinessException) {
+            log.warn(getMessage(ex));
+        } else {
+            log.error(getMessage(ex));
+        }
     }
 }
