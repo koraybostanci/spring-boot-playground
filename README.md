@@ -1,4 +1,4 @@
-## Description
+### Description
 
 A playground project for Spring Boot application, based on;
 
@@ -7,47 +7,38 @@ A playground project for Spring Boot application, based on;
 - RabbitMQ 3.8.x
 - Redis 6
 
-## Building the application
+### Building the application
 
-### By Maven
+#### Building a Jar by Maven
 ```shell
 mvn clean install -Dmaven.test.skip=true
 ```
 
-### By Docker
-```docker
+#### Building a Docker image
+```shell
 docker build . -t springboot-playground:0.0.1
 ```
 
-## Running the application
+### Running the application
 
-### How to run dependencies
+#### On Local
 
-The easiest way to run dependencies on the local environment is to run them via Docker.
+##### 1. Only the application
 
-**RabbitMQ**
-```docker
-docker run -d -it --name local-rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-```
+If you already have the dependencies running on your local, you can simply execute the command below and run the application. 
 
-**Redis**
-````docker
-docker run -d -it --name local-redis -p 6379:6379 redis:6
-````
-
-**HttpBin**
-````docker
-docker run -d -it --name local-httpbin -p 8001:80 kennethreitz/httpbin
-````
-
-### How to run the application
-
-### By Maven
 ```shell
 mvn spring-boot:run
 ```
 
-### By Docker
-```docker
-docker run -d -it --name local-springboot-playground -p 7979:7979 -p 8080:8080 springboot-playground:0.0.1
-```
+##### 2. Application and its dependencies together
+
+The easiest way to run the application on your local is to run it as a Docker container. To make that process smooth, the application comes with a shell script.
+
+By using the `build.sh`, the application can be built and packaged into a Docker image. Then, the dependencies can be run as Docker containers. Finally, the application can be run as a Docker container.
+
+To run the application and its dependencies as Docker containers, you can go to the main directory of the application and run the command below.
+
+````shell
+sh build.sh
+````
