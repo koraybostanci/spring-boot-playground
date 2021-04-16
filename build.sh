@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 build_jar() {
   echo "Building Jar"
@@ -12,12 +12,12 @@ build_docker() {
 
 docker_compose_down() {
   echo "docker_compose_down"
-  docker-compose down
+  docker compose -f compose.yaml down
 }
 
 docker_compose_up() {
   echo "docker_compose_up"
-  docker-compose up -d --build
+  docker compose -f compose.yaml up -d --build
 }
 
 build_jar

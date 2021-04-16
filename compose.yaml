@@ -1,7 +1,9 @@
 version: "3.9"
 
 networks:
-  application:
+  default:
+    external: true
+    name: dev
 
 services:
   app:
@@ -12,36 +14,12 @@ services:
     ports:
       - "8080:8080"
       - "8090:8090"
-    networks:
-      - "application"
     restart: always
     depends_on:
-      - rabbitmq
-      - redis
       - httpbin
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: local-rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-      - "15692:15692"
-    networks:
-      - "application"
-    restart: always
-  redis:
-    image: redis:6
-    container_name: local-redis
-    ports:
-      - "6379:6379"
-    networks:
-      - "application"
-    restart: always
   httpbin:
     image: kennethreitz/httpbin
-    container_name: local-httpbin
+    container_name: httpbin
     ports:
       - "8001:80"
-    networks:
-      - "application"
     restart: always
