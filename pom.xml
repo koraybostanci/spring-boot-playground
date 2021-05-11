@@ -32,7 +32,7 @@
         <wiremock.version>2.27.2</wiremock.version>
 
         <!-- Plugin Versions -->
-        <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
 
         <!-- Properties -->
         <rabbitmq.host>localhost</rabbitmq.host>
