@@ -27,7 +27,7 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <modelmapper.version>2.4.4</modelmapper.version>
-        <resilience4j.version>1.7.0</resilience4j.version>
+        <resilience4j.version>1.7.1</resilience4j.version>
         <testcontainers.version>1.15.3</testcontainers.version>
         <wiremock.version>2.27.2</wiremock.version>
 
